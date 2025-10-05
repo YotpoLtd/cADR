@@ -37,14 +37,21 @@ jobs:
       
       - name: Test package installation
         run: |
+          set -e
+          echo "Creating package tarball..."
           npm pack --workspace=cadr-cli
+          echo "Installing package globally..."
           npm install -g ./cadr-cli-0.0.1.tgz
+          echo "Testing cadr command..."
           cadr
+          echo "Package installation test passed!"
         shell: bash
       
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         if: matrix.os == 'ubuntu-latest' && matrix.node-version == '20.x'
+        continue-on-error: true
         with:
           files: ./coverage/lcov.info
+          fail_ci_if_error: false
 

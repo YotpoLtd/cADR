@@ -1,6 +1,7 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { resolve } from 'path';
+import { tmpdir } from 'os';
 
 const execAsync = promisify(exec);
 const CLI_PATH = resolve(__dirname, '../../packages/cli/bin/cadr.js');
@@ -26,7 +27,7 @@ describe('CLI Execution', () => {
   });
 
   test('works when executed from different directory', async () => {
-    const { stdout } = await execAsync(`node ${CLI_PATH}`, { cwd: '/tmp' });
+    const { stdout } = await execAsync(`node ${CLI_PATH}`, { cwd: tmpdir() });
     expect(stdout).toContain('cADR');
   });
 });

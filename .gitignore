@@ -4,6 +4,9 @@ node_modules/
 # Build outputs
 dist/
 *.tgz
+# Prevent compiled JS in src directories
+packages/*/src/**/*.js
+packages/*/src/**/*.js.map
 
 # Test coverage
 coverage/

@@ -39,10 +39,11 @@ jobs:
         run: |
           set -ex
           echo "Creating package tarball..."
-          npm pack --workspace=cadr-cli
+          PKG_TGZ=$(npm pack --workspace=cadr-cli)
+          echo "Created: $PKG_TGZ"
           
           echo "Installing package globally..."
-          npm install -g ./cadr-cli-0.0.1.tgz
+          npm install -g "$PKG_TGZ"
           
           echo "Verifying installation..."
           npm list -g cadr-cli || echo "Package not found in global list"

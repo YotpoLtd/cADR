@@ -1,5 +1,10 @@
 # cADR - Continuous Architectural Decision Records
 
+[![Test](https://github.com/rbarabash/cADR/actions/workflows/test.yml/badge.svg)](https://github.com/rbarabash/cADR/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/rbarabash/cADR/branch/main/graph/badge.svg)](https://codecov.io/gh/rbarabash/cADR)
+[![npm version](https://badge.fury.io/js/cadr-cli.svg)](https://www.npmjs.com/package/cadr-cli)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Automatically capture and document architectural decisions as you code.
 
 ## Features

@@ -37,13 +37,24 @@ jobs:
       
       - name: Test package installation
         run: |
-          set -e
+          set -ex
           echo "Creating package tarball..."
           npm pack --workspace=cadr-cli
+          
           echo "Installing package globally..."
           npm install -g ./cadr-cli-0.0.1.tgz
+          
+          echo "Verifying installation..."
+          npm list -g cadr-cli || echo "Package not found in global list"
+          
+          echo "Checking npm bin directory..."
+          echo "npm bin -g: $(npm bin -g)"
+          ls -la "$(npm bin -g)" | grep cadr || echo "cadr not found in bin directory"
+          
           echo "Testing cadr command..."
+          which cadr || echo "cadr not in PATH"
           cadr
+          
           echo "Package installation test passed!"
         shell: bash
       

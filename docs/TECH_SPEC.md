@@ -12,7 +12,7 @@ graph TD
     end
 
     subgraph Core Logic
-        C[@cadr/core]
+        C[cadr-cli]
     end
 
     A -- imports --> C

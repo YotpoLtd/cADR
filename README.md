@@ -20,13 +20,19 @@ Automatically capture and document architectural decisions as you code.
 ### Via npx (no install required)
 
 ```bash
-npx cadr@latest
+# Using GitHub Packages
+npx @yotpoltd/cadr-cli@latest --registry=https://npm.pkg.github.com
 ```
 
 ### Global installation
 
 ```bash
-npm install -g cadr-cli
+# Using GitHub Packages (recommended)
+npm install -g @yotpoltd/cadr-cli --registry=https://npm.pkg.github.com
+
+# Or configure npm to use GitHub Packages for @yotpoltd scope
+echo "@yotpoltd:registry=https://npm.pkg.github.com" >> ~/.npmrc
+npm install -g @yotpoltd/cadr-cli
 ```
 
 ## Current Status
@@ -72,6 +78,10 @@ yarn test
 ### Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for development guidelines, commit conventions, and release process.
+
+### GitHub Packages
+
+This project uses GitHub Packages for distribution. See [docs/GITHUB_PACKAGES.md](./docs/GITHUB_PACKAGES.md) for detailed configuration instructions.
 
 ## License
 

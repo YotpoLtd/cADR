@@ -8,6 +8,7 @@ module.exports = {
     '!**/*.d.ts',
     '!**/node_modules/**'
   ],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   // coverageThreshold: {
   //   global: {
   //     branches: 20,
@@ -17,6 +18,6 @@ module.exports = {
   //   }
   // },
   coverageDirectory: 'coverage',
-  verbose: true
+  verbose: false
 };
 

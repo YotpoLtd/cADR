@@ -12,6 +12,8 @@ jobs:
       id-token: write # Required for npm provenance
       issues: write
       pull-requests: write
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
@@ -22,7 +24,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20.x"
-          registry-url: "https://registry.npmjs.org"
+          registry-url: "https://npm.pkg.github.com"
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -44,3 +46,4 @@ jobs:
             @semantic-release/git
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -29,6 +29,13 @@ jobs:
       - name: Build
         run: yarn build
       
+      - name: Verify build
+        run: |
+          echo "Checking if @cadr/core is built..."
+          ls -la packages/core/dist/
+          echo "Testing module resolution..."
+          node -e "console.log('Core module resolved to:', require.resolve('@cadr/core'))"
+      
       - name: Lint
         run: yarn lint
       
@@ -38,12 +45,17 @@ jobs:
       - name: Test package installation
         run: |
           set -ex
-          echo "Creating package tarball..."
-          PKG_TGZ=$(yarn pack --cwd packages/cli)
-          echo "Created: $PKG_TGZ"
+          echo "Creating core package tarball..."
+          CORE_TGZ=$(yarn pack --cwd packages/core)
+          echo "Created core: $CORE_TGZ"
           
-          echo "Installing package globally..."
-          yarn global add "$PKG_TGZ"
+          echo "Creating CLI package tarball..."
+          CLI_TGZ=$(yarn pack --cwd packages/cli)
+          echo "Created CLI: $CLI_TGZ"
+          
+          echo "Installing packages globally..."
+          yarn global add "$CORE_TGZ"
+          yarn global add "$CLI_TGZ"
           
           echo "Verifying installation..."
           yarn global list | grep cadr-cli || echo "Package not found in global list"

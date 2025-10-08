@@ -91,10 +91,10 @@ Execution steps:
    - Present EXACTLY ONE question at a time.
    - For multiple‑choice questions render options as a Markdown table:
 
-     | Option | Description                                  |
+     | Option | Description                                  | Notes                                                  |
      | ------ | -------------------------------------------- | ------------------------------------------------------ |
-     | A      | <Option A description>                       |
-     | B      | <Option B description>                       |
+     | A      | <Option A description>                       |                                                        |
+     | B      | <Option B description>                       |                                                        |
      | C      | <Option C description>                       | (add D/E as needed up to 5)                            |
      | Short  | Provide a different short answer (<=5 words) | (Include only if free-form alternative is appropriate) |
 

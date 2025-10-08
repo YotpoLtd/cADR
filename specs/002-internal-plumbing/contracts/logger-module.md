@@ -1,7 +1,7 @@
 # LoggerModule Contract
 
-**Module**: `packages/cli/src/logger.ts`  
-**Purpose**: Provide structured JSON logging to stderr  
+**Module**: `packages/cli/src/logger.ts`
+**Purpose**: Provide structured JSON logging to stderr
 **Version**: 1.0.0
 
 ## Interface

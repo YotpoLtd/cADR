@@ -1,8 +1,8 @@
 ## **User Story Backlog: cADR (Core MVP for CLI)**
 
-### **Story \#1: "Hello, World\!" - A deployable package**
+### **Story #1: "Hello, World!" - A deployable package**
 
-> **As a developer**, I want to install `cadr-cli` via NPM and run its command to see a "Hello, cADR\!" message, **so that we can verify the CI/CD release pipeline and public installation process works correctly.**
+> **As a developer**, I want to install `cadr-cli` via NPM and run its command to see a "Hello, cADR!" message, **so that we can verify the CI/CD release pipeline and public installation process works correctly.**
 
 * **Definition of Done:**
   * [ ] `package.json` is configured for a public release with a `bin` entry.

@@ -1,7 +1,7 @@
 # GitModule Contract
 
-**Module**: `packages/cli/src/git.ts`  
-**Purpose**: Provide Git repository interaction capabilities  
+**Module**: `packages/cli/src/git.ts`
+**Purpose**: Provide Git repository interaction capabilities
 **Version**: 1.0.0
 
 ## Interface
@@ -35,16 +35,19 @@ export class GitError extends Error {
 **Command**: `git diff --cached --name-only`
 
 **Success Case**:
+
 - Returns array of staged file paths
 - Empty array if no staged files
 - File paths are relative to repository root
 
 **Error Cases**:
+
 - `NOT_GIT_REPO`: Not in a Git repository (exit code 128)
 - `GIT_NOT_FOUND`: Git command not found (exit code 127)
 - `GIT_ERROR`: Other Git errors (permissions, corruption, etc.)
 
 **Error Messages**:
+
 - `NOT_GIT_REPO`: "Not in a Git repository. Please run 'cadr' from within a Git repository."
 - `GIT_NOT_FOUND`: "Git is not installed. Please install Git and try again."
 - `GIT_ERROR`: "Unable to read Git repository. Please check repository permissions."
@@ -69,6 +72,7 @@ try {
 ## Testing Requirements
 
 **Unit Tests Must Cover**:
+
 - Successful retrieval of staged files
 - Empty result when no staged files
 - `NOT_GIT_REPO` error scenario
@@ -77,6 +81,7 @@ try {
 - Command format validation
 
 **Mock Strategy**:
+
 - Mock `child_process.exec` function
 - Simulate different exit codes and outputs
 - Verify command arguments are correct

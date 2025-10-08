@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TypeScript build configuration
 - Jest test framework with comprehensive test coverage
 - ESLint and Prettier for code quality
-- GitHub Actions CI workflow (test on multiple platforms)
+- GitHub Actions CI workflow (test on Linux)
 - GitHub Actions release workflow (automated npm publishing)
 - Cross-platform executable support (Windows, macOS, Linux)
 

@@ -33,7 +33,7 @@ npm install -g cadr-cli
 
 **Version 0.0.1** - Hello World release
 
-This initial release validates the CI/CD pipeline and package distribution. 
+This initial release validates the CI/CD pipeline and package distribution.
 Full ADR functionality coming in upcoming releases!
 
 ## Roadmap
@@ -76,4 +76,3 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for development guidelines.
 ## License
 
 MIT
-

@@ -71,7 +71,7 @@ yarn test
 
 ### Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for development guidelines.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for development guidelines, commit conventions, and release process.
 
 ## License
 

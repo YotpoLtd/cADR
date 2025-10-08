@@ -74,8 +74,7 @@ yarn test
 ```
 cADR/
 ├── packages/
-│   ├── core/          # @cadr/core - Business logic library
-│   └── cli/           # cadr-cli - CLI executable
+│   └── cli/           # cadr-cli - CLI executable with built-in functionality
 ├── tests/
 │   ├── unit/          # Unit tests
 │   └── integration/   # Integration tests

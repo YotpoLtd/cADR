@@ -31,7 +31,7 @@
 
 This feature adds foundational plumbing to cADR by implementing Git integration and structured logging. The primary goal is to establish the core infrastructure that future stories will build upon, while maintaining the existing welcome message functionality.
 
-**Technical Approach**: Extend the existing TypeScript monorepo with new modules in `@cadr/core`:
+**Technical Approach**: Extend the CLI package with built-in modules:
 1. `GitModule` - Shell out to Git CLI for staged files
 2. `LoggerModule` - Structured JSON logging with Pino
 3. CLI integration - Preserve welcome message, add Git functionality
@@ -54,14 +54,14 @@ This feature adds foundational plumbing to cADR by implementing Git integration 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 ### I. Library-First Architecture
-- [x] **PASS**: Feature extends `@cadr/core` package with new modules
-- [x] **PASS**: CLI package imports from core modules, not vice versa
+- [x] **PASS**: Feature extends CLI package with new modules
+- [x] **PASS**: CLI package contains all functionality in self-contained modules
 - [x] **PASS**: GitModule and LoggerModule are pure business logic
 
 ### II. Monorepo Structure
-- [x] **PASS**: Using existing npm workspaces structure
-- [x] **PASS**: Each package maintains own package.json
-- [x] **PASS**: Core package remains independent of cli package
+- [x] **PASS**: Using simplified CLI-only structure
+- [x] **PASS**: CLI package is self-contained
+- [x] **PASS**: No external dependencies between packages
 - [x] **PASS**: New modules follow existing patterns
 
 ### III. Test-First Development (NON-NEGOTIABLE)
@@ -114,25 +114,21 @@ specs/002-internal-plumbing/
 └── tasks.md             # Phase 2 output (/tasks command - NOT created by /plan)
 ```
 
-### Source Code (extends existing structure)
+### Source Code (simplified structure)
 
 ```
 cADR/
 ├── packages/
-│   ├── core/
-│   │   ├── src/
-│   │   │   ├── index.ts         # Export new modules
-│   │   │   ├── git.ts           # NEW: GitModule implementation
-│   │   │   └── logger.ts        # NEW: LoggerModule implementation
-│   │   └── package.json         # Add pino dependency
-│   │
 │   └── cli/
-│       └── src/
-│           └── index.ts         # MODIFIED: Integrate Git + Logger
+│       ├── src/
+│       │   ├── index.ts         # MODIFIED: Integrate Git + Logger
+│       │   ├── git.ts           # NEW: GitModule implementation
+│       │   └── logger.ts        # NEW: LoggerModule implementation
+│       └── package.json         # Add pino dependency
 │
 ├── tests/
 │   ├── unit/
-│   │   └── core/
+│   │   └── cli/
 │   │       ├── git.test.ts      # NEW: GitModule unit tests
 │   │       └── logger.test.ts   # NEW: LoggerModule unit tests
 │   └── integration/
@@ -141,7 +137,7 @@ cADR/
 └── README.md                    # MODIFIED: Add Git prerequisite
 ```
 
-**Structure Decision**: Extend existing monorepo structure with new modules in `@cadr/core`. Maintain separation of concerns with dedicated modules for Git and logging functionality.
+**Structure Decision**: Use simplified CLI-only structure with built-in modules. Maintain separation of concerns with dedicated modules for Git and logging functionality within the CLI package.
 
 ## Phase 0: Outline & Research
 

@@ -17,8 +17,8 @@
 > **As a developer**, I want `cadr` to read the list of staged files and print them using our structured logger, **so that we prove the application can interact with Git and produce its core output.**
 
 * **Definition of Done:**
-  * [x] The `@cadr/core` library contains a `GitModule` that correctly returns staged file paths.
-  * [x] The `@cadr/core` library contains a `LoggerModule` that outputs valid JSON to `stderr`.
+  * [x] The `cadr-cli` package contains a `GitModule` that correctly returns staged file paths.
+  * [x] The `cadr-cli` package contains a `LoggerModule` that outputs valid JSON to `stderr`.
   * [x] The `cadr-cli` entrypoint successfully integrates these modules.
   * [x] Unit tests are written for the `GitModule` and `LoggerModule`, mocking external dependencies.
   * [x] All previous DoD criteria (CI, PR review, linting) are met.
@@ -30,7 +30,7 @@
 > **As Alex the developer**, I want `cadr` to send my staged code changes to an LLM for **analysis**, so that the tool can intelligently decide if the changes are architecturally significant.
 
 * **Definition of Done:**
-  * [ ] The `@cadr/core` library contains an `LLMClient` that can call the configured LLM with the `v1` analysis prompt.
+  * [ ] The `cadr-cli` package contains an `LLMClient` that can call the configured LLM with the `v1` analysis prompt.
   * [ ] The client correctly parses the `{"is_significant": boolean, "reason": string}` response.
   * [ ] The "fail-open" principle is implemented: if the LLM call fails, a `WARN` is logged and the process exits with code 0.
   * [ ] Integration tests mock the LangChain client and verify the logic for both `true` and `false` responses.
@@ -58,8 +58,8 @@
 
 * **Definition of Done:**
   * [ ] A loading spinner is correctly displayed in the Ink UI during the second LLM call.
-  * [ ] The `@cadr/core` library contains logic to call the `v1` generation prompt.
-  * [ ] The `@cadr/core` library contains an `ADRGenerator` module that can successfully call `adr-tools` to create a markdown file.
+  * [ ] The `cadr-cli` package contains logic to call the `v1` generation prompt.
+  * [ ] The `cadr-cli` package contains an `ADRGenerator` module that can successfully call `adr-tools` to create a markdown file.
   * [ ] The `cadr-cli` displays a final success message with the new file path.
   * [ ] The entire flow is covered by an end-to-end test (mocking the LLM and `adr-tools` calls).
   * [ ] The "fail-open" principle is upheld at every step.

@@ -8,7 +8,8 @@
     [
       "@semantic-release/npm",
       {
-        "pkgRoot": "./packages/cli"
+        "pkgRoot": "./packages/cli",
+        "registry": "https://registry.npmjs.org/"
       }
     ],
     [

@@ -12,8 +12,7 @@ jobs:
       id-token: write # Required for npm provenance
       issues: write
       pull-requests: write
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      packages: write # Required for publishing to GitHub Packages
 
     steps:
       - uses: actions/checkout@v4

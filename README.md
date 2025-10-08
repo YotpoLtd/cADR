@@ -1,7 +1,7 @@
 # cADR - Continuous Architectural Decision Records
 
 [![Test](https://github.com/rbarabash/cADR/actions/workflows/test.yml/badge.svg)](https://github.com/rbarabash/cADR/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/rbarabash/cADR/branch/002-internal-plumbing/graph/badge.svg)](https://codecov.io/gh/rbarabash/cADR)
+[![Coverage](https://img.shields.io/badge/coverage-37%25-orange)](https://github.com/rbarabash/cADR/actions/workflows/test.yml)
 [![npm version](https://badge.fury.io/js/cadr-cli.svg)](https://www.npmjs.com/package/cadr-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 

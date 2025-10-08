@@ -12,7 +12,7 @@ capture and document architectural decisions as you code.
 
 Version: ${CLI_VERSION}
 Core: ${CORE_VERSION}
-Learn more: https://github.com/rbarabash/cADR
+Learn more: https://github.com/YotpoLtd/cADR
 
 Get started by running 'cadr --verbose' to see detailed logs
 `;

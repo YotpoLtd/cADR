@@ -1,7 +1,7 @@
 # cADR - Continuous Architectural Decision Records
 
-[![Test](https://github.com/rbarabash/cADR/actions/workflows/test.yml/badge.svg)](https://github.com/rbarabash/cADR/actions/workflows/test.yml)
-[![Coverage](https://img.shields.io/badge/coverage-37%25-orange)](https://github.com/rbarabash/cADR/actions/workflows/test.yml)
+[![Test](https://github.com/YotpoLtd/cADR/actions/workflows/test.yml/badge.svg)](https://github.com/YotpoLtd/cADR/actions/workflows/test.yml)
+[![Coverage](https://img.shields.io/badge/coverage-37%25-orange)](https://github.com/YotpoLtd/cADR/actions/workflows/test.yml)
 [![npm version](https://badge.fury.io/js/cadr-cli.svg)](https://www.npmjs.com/package/cadr-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -56,7 +56,7 @@ Full ADR functionality coming in upcoming releases!
 
 ```bash
 # Clone the repository
-git clone https://github.com/rbarabash/cADR.git
+git clone https://github.com/YotpoLtd/cADR.git
 cd cADR
 
 # Install dependencies

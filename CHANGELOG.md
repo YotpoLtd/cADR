@@ -34,4 +34,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Structured logging module
 - Configuration file support
 
-[0.0.1]: https://github.com/rbarabash/cADR/releases/tag/v0.0.1
+[0.0.1]: https://github.com/YotpoLtd/cADR/releases/tag/v0.0.1

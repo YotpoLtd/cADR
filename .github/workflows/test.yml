@@ -34,6 +34,14 @@ jobs:
           echo "Core package built successfully"
           ls -la dist/
       
+      - name: Install CLI dependencies
+        run: |
+          echo "Installing CLI dependencies to ensure @cadr/core symlink..."
+          cd packages/cli
+          yarn install
+          echo "Verifying @cadr/core symlink exists..."
+          ls -la node_modules/@cadr/core/dist/ || echo "Symlink not found"
+      
       - name: Build all packages
         run: yarn build
       
@@ -41,6 +49,8 @@ jobs:
         run: |
           echo "Checking if @cadr/core is built..."
           ls -la packages/core/dist/
+          echo "Verifying package.json main entry..."
+          cat packages/core/package.json | grep '"main"'
           echo "Testing module resolution from CLI package..."
           cd packages/cli
           node -e "console.log('Core module resolved to:', require.resolve('@cadr/core'))"

@@ -10,6 +10,9 @@
   },
   "keywords": ["adr", "architecture", "decision-records"],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "pino": "^8.17.2"
+  }
 }
 

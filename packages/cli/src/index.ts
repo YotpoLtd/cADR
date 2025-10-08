@@ -1,5 +1,9 @@
 import { CORE_VERSION, CLI_VERSION, getStagedFiles, loggerInstance, GitError } from '@cadr/core';
 
+// Parse command line arguments
+const args = process.argv.slice(2);
+const isVerbose = args.includes('--verbose') || args.includes('-v');
+
 export function getWelcomeMessage(): string {
   return `🎉 Hello, cADR!
 
@@ -10,7 +14,7 @@ Version: ${CLI_VERSION}
 Core: ${CORE_VERSION}
 Learn more: https://github.com/rbarabash/cADR
 
-Get started by running 'cadr --help' (coming in future versions!)
+Get started by running 'cadr --verbose' to see detailed logs
 `;
 }
 
@@ -33,18 +37,20 @@ export async function processStagedFiles(): Promise<void> {
       process.stdout.write(`\n📁 No staged files found.\n`);
     }
     
-    // Also log for debugging
-    loggerInstance.info('Retrieved staged files', {
-      staged_files: stagedFiles,
-      count: stagedFiles.length
-    });
+    // Only log for debugging when verbose mode is enabled
+    if (isVerbose) {
+      loggerInstance.info('Retrieved staged files', {
+        staged_files: stagedFiles,
+        count: stagedFiles.length
+      });
+    }
   } catch (error) {
     if (error instanceof GitError) {
       // Display helpful error message to stdout
       process.stdout.write(`\n❌ ${error.message}\n`);
       process.exit(1);
     } else {
-      // Log unexpected errors
+      // Log unexpected errors (always show errors)
       loggerInstance.error('Unexpected error occurred', { 
         error: error instanceof Error ? error.message : String(error)
       });

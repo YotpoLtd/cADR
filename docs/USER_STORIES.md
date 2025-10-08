@@ -17,11 +17,11 @@
 > **As a developer**, I want `cadr` to read the list of staged files and print them using our structured logger, **so that we prove the application can interact with Git and produce its core output.**
 
 * **Definition of Done:**
-  * [ ] The `@cadr/core` library contains a `GitModule` that correctly returns staged file paths.
-  * [ ] The `@cadr/core` library contains a `LoggerModule` that outputs valid JSON to `stderr`.
-  * [ ] The `cadr-cli` entrypoint successfully integrates these modules.
-  * [ ] Unit tests are written for the `GitModule` and `LoggerModule`, mocking external dependencies.
-  * [ ] All previous DoD criteria (CI, PR review, linting) are met.
+  * [x] The `@cadr/core` library contains a `GitModule` that correctly returns staged file paths.
+  * [x] The `@cadr/core` library contains a `LoggerModule` that outputs valid JSON to `stderr`.
+  * [x] The `cadr-cli` entrypoint successfully integrates these modules.
+  * [x] Unit tests are written for the `GitModule` and `LoggerModule`, mocking external dependencies.
+  * [x] All previous DoD criteria (CI, PR review, linting) are met.
 
 -----
 

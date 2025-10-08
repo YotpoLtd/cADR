@@ -50,13 +50,14 @@ Full ADR functionality coming in upcoming releases!
 
 - Node.js 20+
 - npm 7+
+- Git 2.x+ (for Git integration features)
 
 ### Setup
 
 ```bash
 # Clone the repository
 git clone https://github.com/rbarabash/cADR.git
-cd cADR/cADR
+cd cADR
 
 # Install dependencies
 npm install

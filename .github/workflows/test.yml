@@ -47,7 +47,7 @@ jobs:
         run: |
           set -ex
           echo "Creating CLI package tarball..."
-          CLI_TGZ=$(yarn pack --cwd packages/cli)
+          CLI_TGZ=$(yarn pack --cwd packages/cli 2>&1 | grep "Wrote tarball to" | sed 's/.*"\(.*\)".*/\1/')
           echo "Created CLI: $CLI_TGZ"
           
           echo "Installing CLI package globally..."

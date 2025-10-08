@@ -1,5 +1,4 @@
-// Note: For v0.0.1, we inline the core version. Future versions will properly bundle @cadr/core
-const CORE_VERSION = '0.0.1';
+import { CORE_VERSION } from '@cadr/core';
 
 export function getWelcomeMessage(): string {
   const version = '0.0.1';

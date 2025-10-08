@@ -1,0 +1,32 @@
+{
+  "name": "cadr-cli",
+  "version": "0.0.1",
+  "description": "Continuous Architectural Decision Records - Automatically capture ADRs as you code",
+  "main": "dist/index.js",
+  "bin": {
+    "cadr": "./bin/cadr.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "keywords": [
+    "adr",
+    "architecture",
+    "cli",
+    "decision-records",
+    "documentation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rbarabash/cADR.git"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@cadr/core": "file:../core"
+  }
+}

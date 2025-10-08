@@ -1,0 +1,69 @@
+name: Test
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node-version: [20.x, 22.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build
+        run: npm run build
+      
+      - name: Lint
+        run: npm run lint
+      
+      - name: Test
+        run: npm test -- --coverage
+      
+      - name: Test package installation
+        run: |
+          set -ex
+          echo "Creating package tarball..."
+          PKG_TGZ=$(npm pack --workspace=cadr-cli)
+          echo "Created: $PKG_TGZ"
+          
+          echo "Installing package globally..."
+          npm install -g "$PKG_TGZ"
+          
+          echo "Verifying installation..."
+          npm list -g cadr-cli || echo "Package not found in global list"
+          
+          echo "Checking npm bin directory..."
+          echo "npm bin -g: $(npm bin -g)"
+          ls -la "$(npm bin -g)" | grep cadr || echo "cadr not found in bin directory"
+          
+          echo "Testing cadr command..."
+          which cadr || echo "cadr not in PATH"
+          cadr
+          
+          echo "Package installation test passed!"
+        shell: bash
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '20.x'
+        continue-on-error: true
+        with:
+          files: ./coverage/lcov.info
+          fail_ci_if_error: false
+

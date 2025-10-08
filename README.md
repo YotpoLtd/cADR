@@ -9,11 +9,12 @@ Automatically capture and document architectural decisions as you code.
 
 ## Features
 
-- 🤖 AI-powered detection of significant code changes
-- 📝 Automated ADR generation
-- ⚡ Integrates with git workflow (pre-commit hook)
-- 🔄 GitHub PR review integration
-- 📦 Zero-config for quick start
+- 🤖 **LLM-Powered Analysis** - OpenAI integration to detect architecturally significant changes
+- 📝 **Smart Detection** - Analyzes git diffs to identify architectural decisions
+- ⚡ **Git Integration** - Works with your existing git workflow
+- 🔧 **Easy Setup** - Interactive configuration with `cadr init`
+- 🛡️ **Fail-Open** - Never blocks your workflow, always exits gracefully
+- 📊 **Structured Logging** - Comprehensive observability with pino
 
 ## Installation
 
@@ -35,24 +36,166 @@ echo "@yotpoltd:registry=https://npm.pkg.github.com" >> ~/.npmrc
 npm install -g @yotpoltd/cadr-cli
 ```
 
-## Current Status
+## Getting Started
 
-**Version 0.0.1** - Hello World release
+### Prerequisites
 
-This initial release validates the CI/CD pipeline and package distribution.
-Full ADR functionality coming in upcoming releases!
+Before you begin, ensure you have:
 
-## Roadmap
+- **Node.js 20+** installed
+- **Git 2.x+** installed
+- **OpenAI API key** (get one from [platform.openai.com/api-keys](https://platform.openai.com/api-keys))
 
-- [x] v0.0.1: Package distribution and CI/CD
-- [ ] v0.1.0: Git integration and file analysis
-- [ ] v0.2.0: LLM-powered change detection
-- [ ] v0.3.0: ADR generation
-- [ ] v1.0.0: Full MVP with CLI and GitHub Agent
+### Step 1: Install cADR
+
+Install globally via npm using GitHub Packages:
+
+```bash
+npm install -g @yotpoltd/cadr-cli --registry=https://npm.pkg.github.com
+```
+
+Or configure npm once to always use GitHub Packages for the `@yotpoltd` scope:
+
+```bash
+echo "@yotpoltd:registry=https://npm.pkg.github.com" >> ~/.npmrc
+npm install -g @yotpoltd/cadr-cli
+```
+
+### Step 2: Set Your OpenAI API Key
+
+Export your OpenAI API key as an environment variable:
+
+```bash
+export OPENAI_API_KEY="sk-your-actual-api-key-here"
+```
+
+💡 **Tip**: Add this to your `~/.bashrc`, `~/.zshrc`, or equivalent to persist across sessions.
+
+### Step 3: Initialize Configuration
+
+Navigate to your Git repository and run:
+
+```bash
+cd /path/to/your/project
+cadr init
+```
+
+This will interactively prompt you for:
+
+- **Provider**: `openai` (default)
+- **Model**: `gpt-4` or `gpt-3.5-turbo` (gpt-4 recommended for better analysis)
+- **API Key Environment Variable**: `OPENAI_API_KEY` (default)
+- **Timeout**: `15` seconds (default)
+- **Ignore Patterns**: Files to exclude from analysis (e.g., `*.md`, `package-lock.json`)
+
+This creates a `cadr.yaml` file in your project root.
+
+### Step 4: Make and Stage Changes
+
+Make some code changes and stage them with git:
+
+```bash
+# Example: Add a new authentication feature
+git add src/auth/login.ts src/auth/session.ts
+```
+
+### Step 5: Analyze for Architectural Significance
+
+Run the analysis:
+
+```bash
+cadr --analyze
+```
+
+**Example output for significant changes:**
+
+```text
+🔍 Analyzing staged changes for architectural significance...
+
+📁 Files (2):
+   src/auth/login.ts
+   src/auth/session.ts
+
+🤖 Sending to openai gpt-4...
+
+✅ Analysis Complete
+
+📊 Result: ✨ ARCHITECTURALLY SIGNIFICANT
+💭 Reasoning: Introduces new authentication system with JWT tokens, 
+   affecting user session management and security architecture. This 
+   represents a fundamental change to how users authenticate.
+
+🎯 Recommendation: Consider creating an ADR to document
+   this architectural decision and its implications.
+```
+
+**Example output for non-significant changes:**
+
+```text
+🔍 Analyzing staged changes for architectural significance...
+
+📁 Files (2):
+   README.md
+   package.json
+
+🤖 Sending to openai gpt-4...
+
+✅ Analysis Complete
+
+📊 Result: ℹ️  NOT ARCHITECTURALLY SIGNIFICANT
+💭 Reasoning: These changes are documentation updates and dependency 
+   version bumps. They don't affect the system architecture, data 
+   flow, or core business logic.
+
+✅ No ADR needed for these changes.
+```
+
+### What's Next?
+
+- **Continue your workflow**: cADR never blocks your commits - it only provides insights
+- **Review the analysis**: Consider the LLM's reasoning for your architectural decisions
+- **Document significant changes**: When flagged as significant, create an ADR documenting the decision
+- **Customize configuration**: Edit `cadr.yaml` to adjust the model, timeout, or ignore patterns
+
+## Usage
+
+### Initialize Configuration
+
+```bash
+cadr init
+```
+
+Creates a `cadr.yaml` file with your LLM configuration.
+
+### Analyze Staged Changes
+
+```bash
+# Stage your changes
+git add src/auth.ts src/user.ts
+
+# Run analysis
+cadr --analyze
+```
+
+The LLM analyzes your changes and determines if they are architecturally significant.
+
+## Configuration
+
+The `cadr.yaml` file configures the LLM analysis:
+
+```yaml
+provider: openai
+analysis_model: gpt-4
+api_key_env: OPENAI_API_KEY
+timeout_seconds: 15
+ignore_patterns:
+  - "*.md"
+  - "package-lock.json"
+```
 
 ## Development
 
-### Prerequisites
+### Development Prerequisites
 
 - Node.js 20+
 - Yarn 1.22+ (package manager)

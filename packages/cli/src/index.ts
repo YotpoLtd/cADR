@@ -44,7 +44,7 @@ export async function processStagedFiles(): Promise<void> {
         count: stagedFiles.length
       });
     }
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof GitError) {
       // Display helpful error message to stdout
       process.stdout.write(`\n❌ ${error.message}\n`);

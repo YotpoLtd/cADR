@@ -1,7 +1,7 @@
 # cADR - Continuous Architectural Decision Records
 
-[![Test](https://github.com/rbarabash/cADR/actions/workflows/test.yml/badge.svg)](https://github.com/rbarabash/cADR/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/rbarabash/cADR/branch/main/graph/badge.svg)](https://codecov.io/gh/rbarabash/cADR)
+[![Test](https://github.com/YotpoLtd/cADR/actions/workflows/test.yml/badge.svg)](https://github.com/YotpoLtd/cADR/actions/workflows/test.yml)
+[![Coverage](https://img.shields.io/badge/coverage-37%25-orange)](https://github.com/YotpoLtd/cADR/actions/workflows/test.yml)
 [![npm version](https://badge.fury.io/js/cadr-cli.svg)](https://www.npmjs.com/package/cadr-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -33,7 +33,7 @@ npm install -g cadr-cli
 
 **Version 0.0.1** - Hello World release
 
-This initial release validates the CI/CD pipeline and package distribution. 
+This initial release validates the CI/CD pipeline and package distribution.
 Full ADR functionality coming in upcoming releases!
 
 ## Roadmap
@@ -49,36 +49,24 @@ Full ADR functionality coming in upcoming releases!
 ### Prerequisites
 
 - Node.js 20+
-- npm 7+
+- Yarn 1.22+ (package manager)
+- Git 2.x+ (for Git integration features)
 
 ### Setup
 
 ```bash
 # Clone the repository
-git clone https://github.com/rbarabash/cADR.git
-cd cADR/cADR
+git clone https://github.com/YotpoLtd/cADR.git
+cd cADR
 
 # Install dependencies
-npm install
+yarn install
 
 # Build packages
-npm run build
+yarn build
 
 # Run tests
-npm test
-```
-
-### Project Structure
-
-```
-cADR/
-├── packages/
-│   ├── core/          # @cadr/core - Business logic library
-│   └── cli/           # cadr-cli - CLI executable
-├── tests/
-│   ├── unit/          # Unit tests
-│   └── integration/   # Integration tests
-└── specs/             # Feature specifications
+yarn test
 ```
 
 ### Contributing
@@ -88,4 +76,3 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for development guidelines.
 ## License
 
 MIT
-

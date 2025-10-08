@@ -3,8 +3,14 @@
 // Executable wrapper for cadr-cli
 // This file is the entry point when running 'cadr' command
 
-const { displayWelcome } = require('../dist/index.js');
+const { displayWelcome, processStagedFiles } = require('../dist/index.js');
 
+// Display welcome message first
 displayWelcome();
-process.exit(0);
+
+// Then process staged files
+processStagedFiles().catch((error) => {
+  console.error('Failed to process staged files:', error.message);
+  process.exit(1);
+});
 

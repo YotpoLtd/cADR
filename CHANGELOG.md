@@ -9,19 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Initial project structure with npm workspaces monorepo
-- @cadr/core package (placeholder for future business logic)
-- cadr-cli package with welcome message display
-- TypeScript build configuration with project references
-- Jest test framework with 80% coverage threshold
+- Initial project structure with simplified CLI architecture
+- cadr-cli package with built-in git integration and logging
+- TypeScript build configuration
+- Jest test framework with comprehensive test coverage
 - ESLint and Prettier for code quality
-- GitHub Actions CI workflow (test on multiple platforms)
+- GitHub Actions CI workflow (test on Linux)
 - GitHub Actions release workflow (automated npm publishing)
 - Cross-platform executable support (Windows, macOS, Linux)
 
 ### Infrastructure
 
-- npm workspaces monorepo setup
+- Self-contained CLI package (no external dependencies)
 - TypeScript 5.x with strict mode
 - Node.js 20+ requirement
 - Automated releases via git tags
@@ -34,4 +33,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Structured logging module
 - Configuration file support
 
-[0.0.1]: https://github.com/[owner]/[repo]/releases/tag/v0.0.1
+[0.0.1]: https://github.com/YotpoLtd/cADR/releases/tag/v0.0.1

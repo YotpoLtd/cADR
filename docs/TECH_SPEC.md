@@ -12,21 +12,20 @@ graph TD
     end
 
     subgraph Core Logic
-        C[@cadr/core]
+        C[cadr-cli]
     end
 
     A -- imports --> C
     B -- imports --> C
 ```
 
-* **`@cadr/core`:** A pure TypeScript library containing all business logic.
+* **`cadr-cli`:** A self-contained CLI package containing all business logic.
   * `src/git.ts`: Functions for interacting with the git CLI.
   * `src/llm.ts`: LangChain-powered clients for analysis and generation.
   * `src/prompts.ts`: Version-controlled prompt templates.
   * `src/adr.ts`: Logic for creating ADR files.
   * **Key Exports:** `analyze(diff): Promise<AnalysisResult>`, `generate(diff): Promise<string>`
-* **`cadr-cli`:** The Ink-based CLI. Its primary role is UI and state management, delegating all logic to `@cadr/core`.
-* **`cadr-agent-tools`:** The GitHub Agent "head". Exposes `@cadr/core` functions as tools consumable by `gh-aw`.
+* **`cadr-agent-tools`:** The GitHub Agent "head". Exposes `cadr-cli` functions as tools consumable by `gh-aw`.
 
 ### **2. API Contracts (Prompts)**
 

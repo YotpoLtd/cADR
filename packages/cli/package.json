@@ -21,12 +21,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rbarabash/cADR.git"
+    "url": "https://github.com/YotpoLtd/cADR.git"
   },
   "engines": {
     "node": ">=20.0.0"
   },
   "dependencies": {
-    "@cadr/core": "file:../core"
+    "pino": "^8.17.2"
   }
 }

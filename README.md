@@ -1,7 +1,7 @@
 # cADR - Continuous Architectural Decision Records
 
 [![Test](https://github.com/rbarabash/cADR/actions/workflows/test.yml/badge.svg)](https://github.com/rbarabash/cADR/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/rbarabash/cADR/branch/main/graph/badge.svg)](https://codecov.io/gh/rbarabash/cADR)
+[![codecov](https://codecov.io/gh/rbarabash/cADR/branch/002-internal-plumbing/graph/badge.svg)](https://codecov.io/gh/rbarabash/cADR)
 [![npm version](https://badge.fury.io/js/cadr-cli.svg)](https://www.npmjs.com/package/cadr-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -49,7 +49,7 @@ Full ADR functionality coming in upcoming releases!
 ### Prerequisites
 
 - Node.js 20+
-- npm 7+
+- Yarn 1.22+ (package manager)
 - Git 2.x+ (for Git integration features)
 
 ### Setup
@@ -60,13 +60,13 @@ git clone https://github.com/rbarabash/cADR.git
 cd cADR
 
 # Install dependencies
-npm install
+yarn install
 
 # Build packages
-npm run build
+yarn build
 
 # Run tests
-npm test
+yarn test
 ```
 
 ### Project Structure

@@ -34,16 +34,16 @@ jobs:
           echo "Core package built successfully"
           ls -la dist/
       
-      - name: Install CLI dependencies
+      - name: Install CLI dependencies and build
         run: |
           echo "Installing CLI dependencies to ensure @cadr/core symlink..."
           cd packages/cli
           yarn install
           echo "Verifying @cadr/core symlink exists..."
           ls -la node_modules/@cadr/core/dist/ || echo "Symlink not found"
-      
-      - name: Build all packages
-        run: yarn build
+          echo "Building CLI package..."
+          yarn build
+          echo "CLI package built successfully"
       
       - name: Verify build
         run: |
@@ -56,6 +56,8 @@ jobs:
           node -e "console.log('Core module resolved to:', require.resolve('@cadr/core'))"
           echo "Checking CLI can import core..."
           node -e "const core = require('@cadr/core'); console.log('Core imported successfully:', Object.keys(core))"
+          echo "Verifying CLI dist files exist..."
+          ls -la dist/ || echo "CLI dist not found"
       
       - name: Lint
         run: yarn lint

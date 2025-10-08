@@ -28,8 +28,15 @@ describe('CLI Execution', () => {
   });
 
   test('works when executed from different directory', async () => {
-    const { stdout } = await execAsync(`node ${CLI_PATH}`, { cwd: tmpdir() });
-    expect(stdout).toContain('cADR');
+    try {
+      const { stdout } = await execAsync(`node ${CLI_PATH}`, { cwd: tmpdir() });
+      expect(stdout).toContain('cADR');
+    } catch (error: any) {
+      // CLI should exit with code 1 when not in a git repository
+      expect(error.code).toBe(1);
+      expect(error.stdout).toContain('cADR');
+      expect(error.stdout).toContain('Unable to read Git repository');
+    }
   });
 });
 

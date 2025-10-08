@@ -21,36 +21,36 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: 'yarn'
       
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --frozen-lockfile
       
       - name: Build
-        run: npm run build
+        run: yarn build
       
       - name: Lint
-        run: npm run lint
+        run: yarn lint
       
       - name: Test
-        run: npm test -- --coverage
+        run: yarn test --coverage
       
       - name: Test package installation
         run: |
           set -ex
           echo "Creating package tarball..."
-          PKG_TGZ=$(npm pack --workspace=cadr-cli)
+          PKG_TGZ=$(yarn pack --cwd packages/cli)
           echo "Created: $PKG_TGZ"
           
           echo "Installing package globally..."
-          npm install -g "$PKG_TGZ"
+          yarn global add "$PKG_TGZ"
           
           echo "Verifying installation..."
-          npm list -g cadr-cli || echo "Package not found in global list"
+          yarn global list | grep cadr-cli || echo "Package not found in global list"
           
-          echo "Checking npm bin directory..."
-          echo "npm bin -g: $(npm bin -g)"
-          ls -la "$(npm bin -g)" | grep cadr || echo "cadr not found in bin directory"
+          echo "Checking yarn bin directory..."
+          echo "yarn global bin: $(yarn global bin)"
+          ls -la "$(yarn global bin)" | grep cadr || echo "cadr not found in bin directory"
           
           echo "Testing cadr command..."
           which cadr || echo "cadr not in PATH"

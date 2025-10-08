@@ -34,21 +34,23 @@ export async function getStagedFiles(): Promise<string[]> {
       .filter(file => file.length > 0);
     
     return stagedFiles;
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Handle different Git error scenarios
-    if (error.code === 128) {
+    const errorWithCode = error as { code?: number };
+    
+    if (errorWithCode.code === 128) {
       throw new GitError(
         'Not in a Git repository. Please run \'cadr\' from within a Git repository.',
         'NOT_GIT_REPO',
-        error
+        error instanceof Error ? error : new Error(String(error))
       );
     }
     
-    if (error.code === 127) {
+    if (errorWithCode.code === 127) {
       throw new GitError(
         'Git is not installed. Please install Git and try again.',
         'GIT_NOT_FOUND',
-        error
+        error instanceof Error ? error : new Error(String(error))
       );
     }
     
@@ -56,7 +58,7 @@ export async function getStagedFiles(): Promise<string[]> {
     throw new GitError(
       'Unable to read Git repository. Please check repository permissions.',
       'GIT_ERROR',
-      error
+      error instanceof Error ? error : new Error(String(error))
     );
   }
 }

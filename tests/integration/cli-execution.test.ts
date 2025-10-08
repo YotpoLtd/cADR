@@ -31,11 +31,12 @@ describe('CLI Execution', () => {
     try {
       const { stdout } = await execAsync(`node ${CLI_PATH}`, { cwd: tmpdir() });
       expect(stdout).toContain('cADR');
-    } catch (error: any) {
+    } catch (error: unknown) {
       // CLI should exit with code 1 when not in a git repository
-      expect(error.code).toBe(1);
-      expect(error.stdout).toContain('cADR');
-      expect(error.stdout).toContain('Unable to read Git repository');
+      const errorWithCode = error as { code?: number; stdout?: string };
+      expect(errorWithCode.code).toBe(1);
+      expect(errorWithCode.stdout).toContain('cADR');
+      expect(errorWithCode.stdout).toContain('Unable to read Git repository');
     }
   });
 });

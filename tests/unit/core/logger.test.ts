@@ -1,4 +1,4 @@
-import pino from 'pino';
+// import pino from 'pino'; // Not used in tests
 
 // Create a test-specific logger that writes to a string array
 class TestLogger {
@@ -63,7 +63,7 @@ describe('LoggerModule', () => {
 
   beforeEach(() => {
     // Get the test logger instance
-    testLogger = loggerInstance as any;
+    testLogger = loggerInstance as TestLogger;
     testLogger.clear();
   });
 

@@ -30,7 +30,7 @@ export async function processStagedFiles(): Promise<void> {
     // Display staged files to user
     if (stagedFiles.length > 0) {
       process.stdout.write(`\n📁 Found ${stagedFiles.length} staged file${stagedFiles.length === 1 ? '' : 's'}:\n`);
-      stagedFiles.forEach(file => {
+      stagedFiles.forEach((file: string) => {
         process.stdout.write(`  • ${file}\n`);
       });
     } else {
@@ -51,8 +51,9 @@ export async function processStagedFiles(): Promise<void> {
       process.exit(1);
     } else {
       // Log unexpected errors (always show errors)
+      const errorMessage = error instanceof Error ? error.message : String(error);
       loggerInstance.error('Unexpected error occurred', { 
-        error: error instanceof Error ? error.message : String(error)
+        error: errorMessage
       });
       process.exit(1);
     }

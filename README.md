@@ -85,4 +85,4 @@ This project uses GitHub Packages for distribution. See [docs/GITHUB_PACKAGES.md
 
 ## License
 
-MIT
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

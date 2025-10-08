@@ -1,4 +1,9 @@
-import { CORE_VERSION, CLI_VERSION, getStagedFiles, loggerInstance, GitError } from '@cadr/core';
+import { getStagedFiles, GitError } from './git';
+import { loggerInstance } from './logger';
+
+// Version constants
+const CORE_VERSION = '0.0.1';
+const CLI_VERSION = '0.0.1';
 
 // Parse command line arguments
 const args = process.argv.slice(2);

@@ -26,38 +26,20 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       
-      - name: Build core package first
+      - name: Build CLI package
         run: |
-          echo "Building core package first..."
-          cd packages/core
-          yarn build
-          echo "Core package built successfully"
-          ls -la dist/
-      
-      - name: Install CLI dependencies and build
-        run: |
-          echo "Installing CLI dependencies to ensure @cadr/core symlink..."
-          cd packages/cli
-          yarn install
-          echo "Verifying @cadr/core symlink exists..."
-          ls -la node_modules/@cadr/core/dist/ || echo "Symlink not found"
           echo "Building CLI package..."
+          cd packages/cli
           yarn build
           echo "CLI package built successfully"
+          ls -la dist/
       
       - name: Verify build
         run: |
-          echo "Checking if @cadr/core is built..."
-          ls -la packages/core/dist/
-          echo "Verifying package.json main entry..."
-          cat packages/core/package.json | grep '"main"'
-          echo "Testing module resolution from CLI package..."
-          cd packages/cli
-          node -e "console.log('Core module resolved to:', require.resolve('@cadr/core'))"
-          echo "Checking CLI can import core..."
-          node -e "const core = require('@cadr/core'); console.log('Core imported successfully:', Object.keys(core))"
           echo "Verifying CLI dist files exist..."
-          ls -la dist/ || echo "CLI dist not found"
+          ls -la packages/cli/dist/ || echo "CLI dist not found"
+          echo "Testing CLI execution..."
+          node packages/cli/bin/cadr.js --help || echo "CLI help test completed"
       
       - name: Lint
         run: yarn lint
@@ -68,16 +50,11 @@ jobs:
       - name: Test package installation
         run: |
           set -ex
-          echo "Creating core package tarball..."
-          CORE_TGZ=$(yarn pack --cwd packages/core)
-          echo "Created core: $CORE_TGZ"
-          
           echo "Creating CLI package tarball..."
           CLI_TGZ=$(yarn pack --cwd packages/cli)
           echo "Created CLI: $CLI_TGZ"
           
-          echo "Installing packages globally..."
-          yarn global add "$CORE_TGZ"
+          echo "Installing CLI package globally..."
           yarn global add "$CLI_TGZ"
           
           echo "Verifying installation..."

@@ -1,4 +1,4 @@
-import { Logger, loggerInstance } from '@cadr/core';
+import { Logger, loggerInstance } from '../../../packages/cli/src/logger';
 
 describe('LoggerModule', () => {
   describe('Logger class', () => {
@@ -21,26 +21,28 @@ describe('LoggerModule', () => {
     });
 
     it('should log info message with context', () => {
-      const context = { userId: 123, action: 'test' };
-      expect(() => logger.info('User action', context)).not.toThrow();
+      // Just verify the method doesn't throw
+      expect(() => logger.info('Test info message', { userId: 123, action: 'test' })).not.toThrow();
     });
 
     it('should log warn message without context', () => {
+      // Just verify the method doesn't throw
       expect(() => logger.warn('Test warning message')).not.toThrow();
     });
 
     it('should log warn message with context', () => {
-      const context = { warning: 'deprecated' };
-      expect(() => logger.warn('Deprecated feature used', context)).not.toThrow();
+      // Just verify the method doesn't throw
+      expect(() => logger.warn('Test warning message', { warning: 'deprecated' })).not.toThrow();
     });
 
     it('should log error message without context', () => {
+      // Just verify the method doesn't throw
       expect(() => logger.error('Test error message')).not.toThrow();
     });
 
     it('should log error message with context', () => {
-      const context = { error: 'validation failed' };
-      expect(() => logger.error('Validation error', context)).not.toThrow();
+      // Just verify the method doesn't throw
+      expect(() => logger.error('Test error message', { error: 'validation failed' })).not.toThrow();
     });
   });
 
@@ -61,25 +63,17 @@ describe('LoggerModule', () => {
 
   describe('Pino logger functionality', () => {
     it('should use Pino for structured logging', () => {
-      // Test that the logger is actually a Pino instance
-      expect(loggerInstance).toBeDefined();
-      
-      // Test that it has Pino-like behavior (doesn't throw on logging)
-      expect(() => {
-        loggerInstance.info('Pino test message', { test: true });
-        loggerInstance.warn('Pino warning', { level: 'warning' });
-        loggerInstance.error('Pino error', { error: 'test error' });
-      }).not.toThrow();
+      expect(() => loggerInstance.info('Pino test message', { test: true })).not.toThrow();
+      expect(() => loggerInstance.warn('Pino warning', { level: 'warning' })).not.toThrow();
+      expect(() => loggerInstance.error('Pino error', { error: 'test error' })).not.toThrow();
     });
 
     it('should handle various data types in context', () => {
-      expect(() => {
-        loggerInstance.info('String context', { message: 'test' });
-        loggerInstance.info('Number context', { count: 42 });
-        loggerInstance.info('Boolean context', { enabled: true });
-        loggerInstance.info('Object context', { data: { nested: 'value' } });
-        loggerInstance.info('Array context', { items: [1, 2, 3] });
-      }).not.toThrow();
+      expect(() => loggerInstance.info('String context', { message: 'test' })).not.toThrow();
+      expect(() => loggerInstance.info('Number context', { count: 42 })).not.toThrow();
+      expect(() => loggerInstance.info('Boolean context', { enabled: true })).not.toThrow();
+      expect(() => loggerInstance.info('Object context', { data: { nested: 'value' } })).not.toThrow();
+      expect(() => loggerInstance.info('Array context', { items: [1, 2, 3] })).not.toThrow();
     });
   });
 });

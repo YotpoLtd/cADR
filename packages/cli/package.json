@@ -27,6 +27,6 @@
     "node": ">=20.0.0"
   },
   "dependencies": {
-    "@cadr/core": "file:../core"
+    "pino": "^8.17.2"
   }
 }

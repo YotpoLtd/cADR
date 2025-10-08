@@ -184,6 +184,6 @@ All technical decisions are established with clear rationale. The approach is:
 - Cross-platform compatible
 
 **Dependencies to Add**:
-- `pino@^8.x` to `@cadr/core` package
+- `pino@^8.x` to `cadr-cli` package
 
 **No External Research Required**: All technologies are well-documented and established.

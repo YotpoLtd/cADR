@@ -10,7 +10,7 @@
 2. Fill Technical Context (scan for NEEDS CLARIFICATION)
    → ✅ No NEEDS CLARIFICATION markers in spec
    → ✅ Project Type: Monorepo (TypeScript workspaces)
-   → ✅ Structure Decision: Extend existing @cadr/core with new modules
+   → ✅ Structure Decision: Extend CLI package with new modules
 3. Fill the Constitution Check section
    → ✅ Constitution loaded from existing project patterns
 4. Evaluate Constitution Check section
@@ -281,7 +281,7 @@ The /tasks command will load `tasks-template.md` and generate tasks based on thi
 ### Expected Tasks Breakdown
 
 1. **Setup Tasks (2)**:
-   - Add pino dependency to @cadr/core
+   - Add pino dependency to cadr-cli
    - Update README with Git prerequisite
 
 2. **Test Tasks (3) [P]**:
@@ -292,7 +292,7 @@ The /tasks command will load `tasks-template.md` and generate tasks based on thi
 3. **Implementation Tasks (3)**:
    - Implement GitModule with error handling
    - Implement LoggerModule with Pino
-   - Update core index.ts to export new modules
+   - Update CLI index.ts to export new modules
 
 4. **Integration Tasks (1)**:
    - Update CLI to use Git + Logger modules

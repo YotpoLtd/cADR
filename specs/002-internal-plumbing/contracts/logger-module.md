@@ -1,6 +1,6 @@
 # LoggerModule Contract
 
-**Module**: `@cadr/core/src/logger.ts`  
+**Module**: `packages/cli/src/logger.ts`  
 **Purpose**: Provide structured JSON logging to stderr  
 **Version**: 1.0.0
 
@@ -77,19 +77,19 @@ const logger = pino({
 ## Usage Example
 
 ```typescript
-import { logger } from '@cadr/core';
+import { loggerInstance } from './logger';
 
 // Simple message
-logger.info('Starting cADR analysis');
+loggerInstance.info('Starting cADR analysis');
 
 // Message with context
-logger.info('Retrieved staged files', {
+loggerInstance.info('Retrieved staged files', {
   staged_files: ['src/index.ts', 'package.json'],
   count: 2
 });
 
 // Error with context
-logger.error('Failed to read Git repository', {
+loggerInstance.error('Failed to read Git repository', {
   error_code: 'NOT_GIT_REPO',
   repository_path: '/path/to/repo'
 });

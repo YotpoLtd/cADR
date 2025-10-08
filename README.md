@@ -69,18 +69,6 @@ yarn build
 yarn test
 ```
 
-### Project Structure
-
-```
-cADR/
-├── packages/
-│   └── cli/           # cadr-cli - CLI executable with built-in functionality
-├── tests/
-│   ├── unit/          # Unit tests
-│   └── integration/   # Integration tests
-└── specs/             # Feature specifications
-```
-
 ### Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for development guidelines.

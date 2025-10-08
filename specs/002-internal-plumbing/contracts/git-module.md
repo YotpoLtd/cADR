@@ -1,6 +1,6 @@
 # GitModule Contract
 
-**Module**: `@cadr/core/src/git.ts`  
+**Module**: `packages/cli/src/git.ts`  
 **Purpose**: Provide Git repository interaction capabilities  
 **Version**: 1.0.0
 
@@ -52,7 +52,7 @@ export class GitError extends Error {
 ## Usage Example
 
 ```typescript
-import { getStagedFiles } from '@cadr/core';
+import { getStagedFiles } from './git';
 
 try {
   const stagedFiles = await getStagedFiles();

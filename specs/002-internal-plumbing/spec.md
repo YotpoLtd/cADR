@@ -78,9 +78,9 @@ This foundational story establishes:
 
 ### Functional Requirements
 
-- **FR-001**: The `@cadr/core` library MUST contain a `GitModule` that can retrieve staged file paths from the current Git repository
+- **FR-001**: The `cadr-cli` package MUST contain a `GitModule` that can retrieve staged file paths from the current Git repository
 
-- **FR-002**: The `@cadr/core` library MUST contain a `LoggerModule` that outputs structured JSON logs to stderr
+- **FR-002**: The `cadr-cli` package MUST contain a `LoggerModule` that outputs structured JSON logs to stderr
 
 - **FR-003**: The `cadr-cli` entrypoint MUST successfully integrate both GitModule and LoggerModule
 

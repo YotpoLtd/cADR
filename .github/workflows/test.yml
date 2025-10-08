@@ -26,15 +26,26 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       
-      - name: Build
+      - name: Build core package first
+        run: |
+          echo "Building core package first..."
+          cd packages/core
+          yarn build
+          echo "Core package built successfully"
+          ls -la dist/
+      
+      - name: Build all packages
         run: yarn build
       
       - name: Verify build
         run: |
           echo "Checking if @cadr/core is built..."
           ls -la packages/core/dist/
-          echo "Testing module resolution..."
+          echo "Testing module resolution from CLI package..."
+          cd packages/cli
           node -e "console.log('Core module resolved to:', require.resolve('@cadr/core'))"
+          echo "Checking CLI can import core..."
+          node -e "const core = require('@cadr/core'); console.log('Core imported successfully:', Object.keys(core))"
       
       - name: Lint
         run: yarn lint

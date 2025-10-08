@@ -27,6 +27,6 @@
     "node": ">=20.0.0"
   },
   "dependencies": {
-    "@cadr/core": "file:../core"
+    "@cadr/core": "workspace:*"
   }
 }

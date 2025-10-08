@@ -30,6 +30,10 @@
     "registry": "https://npm.pkg.github.com"
   },
   "dependencies": {
-    "pino": "^8.17.2"
+    "pino": "^8.17.2",
+    "openai": "^4.0.0",
+    "js-yaml": "^4.1.0",
+    "yup": "^1.0.0",
+    "commander": "^11.0.0"
   }
 }

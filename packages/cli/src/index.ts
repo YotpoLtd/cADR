@@ -1,13 +1,12 @@
+// Removed unused commander import
 import { getStagedFiles, GitError } from './git';
 import { loggerInstance } from './logger';
+import { initCommand } from './commands/init';
+import { analyzeCommand } from './commands/analyze';
 
 // Version constants
 const CORE_VERSION = '0.0.1';
 const CLI_VERSION = '0.0.1';
-
-// Parse command line arguments
-const args = process.argv.slice(2);
-const isVerbose = args.includes('--verbose') || args.includes('-v');
 
 export function getWelcomeMessage(): string {
   return `🎉 Hello, cADR!
@@ -28,7 +27,7 @@ export function displayWelcome(): void {
   process.stdout.write(getWelcomeMessage());
 }
 
-export async function processStagedFiles(): Promise<void> {
+export async function processStagedFiles(verbose = false): Promise<void> {
   try {
     const stagedFiles = await getStagedFiles();
     
@@ -43,7 +42,7 @@ export async function processStagedFiles(): Promise<void> {
     }
     
     // Only log for debugging when verbose mode is enabled
-    if (isVerbose) {
+    if (verbose) {
       loggerInstance.info('Retrieved staged files', {
         staged_files: stagedFiles,
         count: stagedFiles.length
@@ -67,14 +66,23 @@ export async function processStagedFiles(): Promise<void> {
 
 // Main execution block - run when module is executed directly
 if (require.main === module) {
-  // Display welcome message first
-  displayWelcome();
+  const args = process.argv.slice(2);
   
-  // Then process staged files
-  processStagedFiles().catch((error) => {
-    loggerInstance.error('Failed to process staged files', { 
-      error: error instanceof Error ? error.message : String(error)
-    });
-    process.exit(1);
+  // Handle commands manually
+  (async () => {
+    if (args[0] === 'init') {
+      await initCommand();
+    } else if (args[0] === 'analyze') {
+      await analyzeCommand();
+    } else if (args.includes('--analyze')) {
+      await analyzeCommand();
+    } else {
+      // Default behavior - display welcome and staged files
+      displayWelcome();
+      await processStagedFiles(args.includes('--verbose') || args.includes('-v'));
+    }
+  })().catch((error) => {
+    // eslint-disable-next-line no-console
+    console.error(error);
   });
 }

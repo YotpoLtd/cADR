@@ -2,7 +2,13 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "module": "es2015",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
   },
   "include": ["src/**/*"],
   "references": []

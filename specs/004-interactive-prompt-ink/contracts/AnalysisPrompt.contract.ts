@@ -94,12 +94,14 @@ export function promptForAdr(reason: string): Promise<boolean>;
 
 /**
  * Internal state interface (not exported, for documentation only)
+ * This interface documents the expected component state structure
+ * but is not used directly in the contract implementation.
  */
-interface PromptState {
-  selection: 'create' | 'skip';
-  isActive: boolean;
-  reason: string;
-}
+// interface PromptState {
+//   selection: 'create' | 'skip';
+//   isActive: boolean;
+//   reason: string;
+// }
 
 /**
  * Contract Tests (to be implemented):

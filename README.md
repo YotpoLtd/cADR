@@ -69,7 +69,7 @@ Export your API key as an environment variable:
 export OPENAI_API_KEY="sk-your-actual-api-key-here"
 
 # or Google Gemini
-export GOOGLE_GENERATIVE_AI_API_KEY="your-google-api-key-here"
+export GEMINI_API_KEY="your-google-api-key-here"
 ```
 
 💡 **Tip**: Add this to your `~/.bashrc`, `~/.zshrc`, or equivalent to persist across sessions.
@@ -87,7 +87,7 @@ This will interactively prompt you for:
 
 - **Provider**: `openai` (default) or `gemini`
 - **Model**: e.g., `gpt-4` (OpenAI) or `gemini-1.5-pro` (Gemini)
-- **API Key Environment Variable**: `OPENAI_API_KEY` (OpenAI) or `GOOGLE_GENERATIVE_AI_API_KEY` (Gemini)
+- **API Key Environment Variable**: `OPENAI_API_KEY` (OpenAI) or `GEMINI_API_KEY` (Gemini)
 - **Timeout**: `15` seconds (default)
 - **Ignore Patterns**: Files to exclude from analysis (e.g., `*.md`, `package-lock.json`)
 
@@ -200,7 +200,7 @@ ignore_patterns:
 # Gemini example
 # provider: gemini
 # analysis_model: gemini-1.5-pro
-# api_key_env: GOOGLE_GENERATIVE_AI_API_KEY
+# api_key_env: GEMINI_API_KEY
 # timeout_seconds: 15
 # ignore_patterns:
 #   - "*.md"

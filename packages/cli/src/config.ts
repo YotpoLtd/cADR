@@ -145,7 +145,7 @@ export async function createConfig(configPath: string): Promise<AnalysisConfig |
 
     // Choose sensible defaults based on provider
     const defaultModel = provider === 'gemini' ? 'gemini-1.5-pro' : 'gpt-4';
-    const defaultApiKeyEnv = provider === 'gemini' ? 'GOOGLE_GENERATIVE_AI_API_KEY' : 'OPENAI_API_KEY';
+    const defaultApiKeyEnv = provider === 'gemini' ? 'GEMINI_API_KEY' : 'OPENAI_API_KEY';
 
     const analysis_model = await prompt(rl, 'Analysis Model', defaultModel);
     const api_key_env = await prompt(rl, 'API Key Environment Variable', defaultApiKeyEnv);

@@ -349,7 +349,7 @@ diff --git a/src/auth.ts b/src/auth.ts
       const geminiConfig: AnalysisConfig = {
         provider: 'gemini',
         analysis_model: 'gemini-1.5-pro',
-        api_key_env: 'GOOGLE_GENERATIVE_AI_API_KEY',
+        api_key_env: 'GEMINI_API_KEY',
         timeout_seconds: 10,
       };
       (GoogleGenerativeAI as unknown as jest.Mock).mockImplementation(() => ({
@@ -362,18 +362,18 @@ diff --git a/src/auth.ts b/src/auth.ts
         }),
       }));
 
-      process.env.GOOGLE_GENERATIVE_AI_API_KEY = 'test-api-key';
+      process.env.GEMINI_API_KEY = 'test-api-key';
       const response = await analyzeChanges(geminiConfig, mockRequest);
       expect(response.result).not.toBeNull();
       expect(response.result?.is_significant).toBe(false);
-      delete process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+      delete process.env.GEMINI_API_KEY;
     });
 
     test('handles Gemini timeout gracefully', async () => {
       const geminiConfig: AnalysisConfig = {
         provider: 'gemini',
         analysis_model: 'gemini-1.5-pro',
-        api_key_env: 'GOOGLE_GENERATIVE_AI_API_KEY',
+        api_key_env: 'GEMINI_API_KEY',
         timeout_seconds: 1,
       };
       type GeminiResponse = { response: { text: () => string } };
@@ -386,11 +386,11 @@ diff --git a/src/auth.ts b/src/auth.ts
         }),
       }));
 
-      process.env.GOOGLE_GENERATIVE_AI_API_KEY = 'test-api-key';
+      process.env.GEMINI_API_KEY = 'test-api-key';
       const response = await analyzeChanges(geminiConfig, mockRequest);
       expect(response.result).toBeNull();
       expect(response.error).toMatch(/timeout/i);
-      delete process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+      delete process.env.GEMINI_API_KEY;
     });
   });
 

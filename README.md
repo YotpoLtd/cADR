@@ -238,6 +238,20 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for development guidelines, commit conv
 
 This project uses GitHub Packages for distribution. See [docs/GITHUB_PACKAGES.md](./docs/GITHUB_PACKAGES.md) for detailed configuration instructions.
 
+## Code Coverage
+
+The coverage badge and test coverage table in this README are automatically updated on every merge to `main`:
+
+- **Coverage Badge**: Shows overall line coverage percentage with color coding:
+  - 🟢 Green: ≥80%
+  - 🟡 Yellow: 60-79%
+  - 🟠 Orange: 40-59%
+  - 🔴 Red: <40%
+
+- **Coverage Table**: Detailed breakdown of statements, branches, functions, and lines coverage
+
+The coverage data is generated from Jest test runs and automatically committed by GitHub Actions. View detailed HTML coverage reports in the GitHub Actions artifacts (30-day retention).
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

@@ -1,0 +1,10 @@
+## Test Coverage
+
+| Category | Percentage | Covered / Total |
+|----------|------------|-----------------|
+| Statements | 24.71% | 43 / 174 |
+| Branches | 13.59% | 14 / 103 |
+| Functions | 18.51% | 5 / 27 |
+| Lines | 24.85% | 43 / 173 |
+
+> Coverage report generated on 2025-10-09

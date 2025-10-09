@@ -204,7 +204,7 @@ describe('Analyze Command', () => {
       await analyzeCommand();
 
       // The command should be a thin wrapper around analysis
-      expect(analysis.runAnalysis).toHaveBeenCalledWith();
+      expect(analysis.runAnalysis).toHaveBeenCalledWith({ mode: 'all' });
     });
 
     test('does not modify or intercept analysis results', async () => {
@@ -213,7 +213,7 @@ describe('Analyze Command', () => {
       await analyzeCommand();
 
       // Should just call through without modification
-      expect(analysis.runAnalysis).toHaveBeenCalledWith();
+      expect(analysis.runAnalysis).toHaveBeenCalledWith({ mode: 'all' });
     });
   });
 

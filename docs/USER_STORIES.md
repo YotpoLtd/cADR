@@ -30,12 +30,12 @@
 > **As Alex the developer**, I want `cadr` to send my staged code changes to an LLM for **analysis**, so that the tool can intelligently decide if the changes are architecturally significant.
 
 * **Definition of Done:**
-  * [ ] The `cadr-cli` package contains an `LLMClient` that can call the configured LLM with the `v1` analysis prompt.
-  * [ ] The client correctly parses the `{"is_significant": boolean, "reason": string}` response.
-  * [ ] The "fail-open" principle is implemented: if the LLM call fails, a `WARN` is logged and the process exits with code 0.
-  * [ ] Integration tests mock the LangChain client and verify the logic for both `true` and `false` responses.
-  * [ ] All secrets (API keys) are loaded from environment variables.
-  * [ ] All previous DoD criteria are met.
+  * [x] The `cadr-cli` package contains an `LLMClient` that can call the configured LLM with the `v1` analysis prompt.
+  * [x] The client correctly parses the `{"is_significant": boolean, "reason": string}` response.
+  * [x] The "fail-open" principle is implemented: if the LLM call fails, a `WARN` is logged and the process exits with code 0.
+  * [x] Integration tests mock the LangChain client and verify the logic for both `true` and `false` responses.
+  * [x] All secrets (API keys) are loaded from environment variables.
+  * [x] All previous DoD criteria are met.
 
 -----
 

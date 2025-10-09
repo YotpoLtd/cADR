@@ -250,7 +250,7 @@ The coverage badge and test coverage table in this README are automatically upda
 
 - **Coverage Table**: Detailed breakdown of statements, branches, functions, and lines coverage
 
-The coverage data is generated from Jest test runs and automatically committed by GitHub Actions. View detailed HTML coverage reports in the GitHub Actions artifacts (30-day retention).
+The coverage data is generated from Jest test runs. When tests run on the main branch, GitHub Actions automatically creates a pull request with updated coverage data. View detailed HTML coverage reports in the GitHub Actions artifacts (30-day retention).
 
 ## License
 

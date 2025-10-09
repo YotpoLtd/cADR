@@ -18,6 +18,7 @@ module.exports = {
   //   }
   // },
   coverageDirectory: 'coverage',
+  coverageReporters: ['text', 'lcov', 'json-summary'],
   verbose: false
 };
 

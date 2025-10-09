@@ -1,6 +1,5 @@
-const React = require('react');
-const { useState } = React;
-const { Box, Text, useInput, render } = require('ink');
+import React, { useState } from 'react';
+import { Box, Text, useInput, render } from 'ink';
 
 export interface AnalysisPromptProps {
   reason: string;

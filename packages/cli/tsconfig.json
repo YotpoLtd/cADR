@@ -5,13 +5,9 @@
     "rootDir": "./src",
     "jsx": "react-jsx",
     "jsxImportSource": "react",
-    "module": "commonjs",
-    "target": "ES2020",
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true
+    "module": "es2015",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*"],
   "references": []

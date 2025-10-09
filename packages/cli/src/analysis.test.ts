@@ -32,8 +32,8 @@ describe('Analysis Orchestration', () => {
     jest.clearAllMocks();
     
     (config.loadConfig as jest.Mock).mockResolvedValue(mockConfig);
-    (git.getStagedFiles as jest.Mock).mockResolvedValue(mockStagedFiles);
-    (git.getStagedDiff as jest.Mock).mockResolvedValue(mockDiff);
+    (git.getChangedFiles as jest.Mock).mockResolvedValue(mockStagedFiles);
+    (git.getDiff as jest.Mock).mockResolvedValue(mockDiff);
     (llm.analyzeChanges as jest.Mock).mockResolvedValue(mockAnalysisResponse);
   });
 
@@ -42,8 +42,8 @@ describe('Analysis Orchestration', () => {
       await runAnalysis();
       
       expect(config.loadConfig).toHaveBeenCalled();
-      expect(git.getStagedFiles).toHaveBeenCalled();
-      expect(git.getStagedDiff).toHaveBeenCalled();
+      expect(git.getChangedFiles).toHaveBeenCalled();
+      expect(git.getDiff).toHaveBeenCalled();
       expect(llm.analyzeChanges).toHaveBeenCalled();
     });
 
@@ -54,7 +54,7 @@ describe('Analysis Orchestration', () => {
     });
 
     test('handles no staged files gracefully', async () => {
-      (git.getStagedFiles as jest.Mock).mockResolvedValue([]);
+      (git.getChangedFiles as jest.Mock).mockResolvedValue([]);
       
       await expect(runAnalysis()).resolves.not.toThrow();
     });

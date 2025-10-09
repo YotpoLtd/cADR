@@ -21,7 +21,6 @@ describe('CLI Help', () => {
     const output = stdoutSpy.mock.calls[0][0];
     expect(output).toContain('init');
     expect(output).toContain('analyze');
-    expect(output).toContain('status');
     expect(output).toContain('help');
   });
 

@@ -8,7 +8,7 @@ Automatically capture and document architectural decisions as you code.
 
 ## Features
 
-- 🤖 **LLM-Powered Analysis** - OpenAI integration to detect architecturally significant changes
+- 🤖 **LLM-Powered Analysis** - OpenAI and Gemini integration to detect architecturally significant changes
 - 📝 **Smart Detection** - Analyzes git diffs to identify architectural decisions
 - ⚡ **Git Integration** - Works with your existing git workflow
 - 🔧 **Easy Setup** - Interactive configuration with `cadr init`
@@ -43,7 +43,7 @@ Before you begin, ensure you have:
 
 - **Node.js 20+** installed
 - **Git 2.x+** installed
-- **OpenAI API key** (get one from [platform.openai.com/api-keys](https://platform.openai.com/api-keys))
+- **OpenAI API key** (get one from [OpenAI API keys](https://platform.openai.com/api-keys)) or **Google AI Studio API key** (get one from [Google AI Studio](https://aistudio.google.com/app/apikey))
 
 ### Step 1: Install cADR
 
@@ -60,12 +60,16 @@ echo "@yotpoltd:registry=https://npm.pkg.github.com" >> ~/.npmrc
 npm install -g @yotpoltd/cadr-cli
 ```
 
-### Step 2: Set Your OpenAI API Key
+### Step 2: Set Your API Key
 
-Export your OpenAI API key as an environment variable:
+Export your API key as an environment variable:
 
 ```bash
+# OpenAI
 export OPENAI_API_KEY="sk-your-actual-api-key-here"
+
+# or Google Gemini
+export GEMINI_API_KEY="your-google-api-key-here"
 ```
 
 💡 **Tip**: Add this to your `~/.bashrc`, `~/.zshrc`, or equivalent to persist across sessions.
@@ -81,9 +85,9 @@ cadr init
 
 This will interactively prompt you for:
 
-- **Provider**: `openai` (default)
-- **Model**: `gpt-4` or `gpt-3.5-turbo` (gpt-4 recommended for better analysis)
-- **API Key Environment Variable**: `OPENAI_API_KEY` (default)
+- **Provider**: `openai` (default) or `gemini`
+- **Model**: e.g., `gpt-4` (OpenAI) or `gemini-1.5-pro` (Gemini)
+- **API Key Environment Variable**: `OPENAI_API_KEY` (OpenAI) or `GEMINI_API_KEY` (Gemini)
 - **Timeout**: `15` seconds (default)
 - **Ignore Patterns**: Files to exclude from analysis (e.g., `*.md`, `package-lock.json`)
 
@@ -183,6 +187,7 @@ The LLM analyzes your changes and determines if they are architecturally signifi
 The `cadr.yaml` file configures the LLM analysis:
 
 ```yaml
+# OpenAI example
 provider: openai
 analysis_model: gpt-4              # or gpt-4-turbo-preview for 128k context
 api_key_env: OPENAI_API_KEY
@@ -191,15 +196,26 @@ ignore_patterns:
   - "*.md"
   - "package-lock.json"
   - "yarn.lock"
+
+# Gemini example
+# provider: gemini
+# analysis_model: gemini-1.5-pro
+# api_key_env: GEMINI_API_KEY
+# timeout_seconds: 15
+# ignore_patterns:
+#   - "*.md"
+#   - "package-lock.json"
+#   - "yarn.lock"
 ```
 
 ### Configuration Options
 
-- **`provider`**: LLM provider (currently only `openai` supported)
-- **`analysis_model`**: OpenAI model to use
+- **`provider`**: LLM provider (`openai` or `gemini`)
+- **`analysis_model`**: Model to use
   - `gpt-4`: 8k context window (default)
   - `gpt-4-turbo-preview`: 128k context window (recommended for large diffs)
   - `gpt-4-1106-preview`: 128k context window
+  - `gemini-1.5-pro`: 1.5 Pro model (Gemini)
 - **`api_key_env`**: Environment variable containing your API key
 - **`timeout_seconds`**: Request timeout (1-60 seconds)
 - **`ignore_patterns`**: Files to exclude from analysis (glob patterns)

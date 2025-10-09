@@ -33,6 +33,7 @@
   "dependencies": {
     "pino": "^8.17.2",
     "openai": "^4.0.0",
+    "@google/generative-ai": "^0.21.0",
     "js-yaml": "^4.1.0",
     "yup": "^1.0.0",
     "commander": "^11.0.0"

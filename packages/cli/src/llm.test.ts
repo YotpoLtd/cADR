@@ -1,9 +1,11 @@
 import { analyzeChanges, AnalysisRequest } from './llm';
 import { AnalysisConfig } from './config';
 import OpenAI from 'openai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Mock OpenAI module
 jest.mock('openai');
+jest.mock('@google/generative-ai');
 
 describe('LLM Client Module', () => {
   const mockConfig: AnalysisConfig = {
@@ -341,6 +343,54 @@ diff --git a/src/auth.ts b/src/auth.ts
       expect(response.result).not.toBeNull();
       expect(response.error).toBeUndefined();
       expect(response.result?.confidence).toBe(0.95);
+    });
+
+    test('supports Gemini provider with valid JSON response', async () => {
+      const geminiConfig: AnalysisConfig = {
+        provider: 'gemini',
+        analysis_model: 'gemini-1.5-pro',
+        api_key_env: 'GEMINI_API_KEY',
+        timeout_seconds: 10,
+      };
+      (GoogleGenerativeAI as unknown as jest.Mock).mockImplementation(() => ({
+        getGenerativeModel: () => ({
+          generateContent: jest.fn().mockResolvedValue({
+            response: {
+              text: () => JSON.stringify({ is_significant: false, reason: '' }),
+            },
+          }),
+        }),
+      }));
+
+      process.env.GEMINI_API_KEY = 'test-api-key';
+      const response = await analyzeChanges(geminiConfig, mockRequest);
+      expect(response.result).not.toBeNull();
+      expect(response.result?.is_significant).toBe(false);
+      delete process.env.GEMINI_API_KEY;
+    });
+
+    test('handles Gemini timeout gracefully', async () => {
+      const geminiConfig: AnalysisConfig = {
+        provider: 'gemini',
+        analysis_model: 'gemini-1.5-pro',
+        api_key_env: 'GEMINI_API_KEY',
+        timeout_seconds: 1,
+      };
+      type GeminiResponse = { response: { text: () => string } };
+      const slowPromise: Promise<GeminiResponse> = new Promise((resolve) => setTimeout(() => resolve({
+        response: { text: () => JSON.stringify({ is_significant: true, reason: 'Test' }) }
+      }), 3000));
+      (GoogleGenerativeAI as unknown as jest.Mock).mockImplementation(() => ({
+        getGenerativeModel: () => ({
+          generateContent: jest.fn().mockReturnValue(slowPromise),
+        }),
+      }));
+
+      process.env.GEMINI_API_KEY = 'test-api-key';
+      const response = await analyzeChanges(geminiConfig, mockRequest);
+      expect(response.result).toBeNull();
+      expect(response.error).toMatch(/timeout/i);
+      delete process.env.GEMINI_API_KEY;
     });
   });
 

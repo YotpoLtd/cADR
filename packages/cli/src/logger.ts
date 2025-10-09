@@ -1,9 +1,12 @@
 import pino from 'pino';
 
-// Configure Pino to output JSON to stderr
+// Configure Pino to be silent by default (or verbose if --verbose flag is present)
+const isVerbose = process.argv.includes('--verbose') || process.argv.includes('-v');
+const isTest = process.env.NODE_ENV === 'test';
+
 const logger = pino({
-  level: 'info',
-  transport: {
+  level: isTest || !isVerbose ? 'silent' : 'info',
+  transport: isTest || !isVerbose ? undefined : {
     target: 'pino/file',
     options: { destination: 2 } // stderr
   }

@@ -41,7 +41,7 @@ npm install -g @yotpoltd/cadr-cli
 
 Create a `.npmrc` file in your project:
 
-```
+```text
 @yotpoltd:registry=https://npm.pkg.github.com
 ```
 
@@ -64,13 +64,14 @@ npm config set //npm.pkg.github.com/:_authToken YOUR_GITHUB_TOKEN
 
 Or add to your `.npmrc`:
 
-```
+```text
 //npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
 ```
 
 ## Package Scope
 
 The package is published under the `@yotpoltd` scope:
+
 - Package name: `@yotpoltd/cadr-cli`
 - Registry: `https://npm.pkg.github.com`
 - Organization: `YotpoLtd`

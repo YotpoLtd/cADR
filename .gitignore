@@ -12,6 +12,9 @@ packages/*/src/**/*.js.map
 coverage/
 *.lcov
 
+# Test scripts
+test-cli.sh
+
 # IDE
 .vscode/
 .idea/

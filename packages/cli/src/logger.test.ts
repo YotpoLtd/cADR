@@ -1,6 +1,17 @@
-import { Logger, loggerInstance } from '../../../packages/cli/src/logger';
+import { Logger, loggerInstance } from './logger';
 
 describe('LoggerModule', () => {
+  // Suppress Pino logs during tests
+  beforeEach(() => {
+    jest.spyOn(console, 'log').mockImplementation();
+    jest.spyOn(console, 'warn').mockImplementation();
+    jest.spyOn(console, 'error').mockImplementation();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   describe('Logger class', () => {
     let logger: Logger;
 

@@ -35,7 +35,7 @@ jobs:
           echo "Verifying CLI dist files exist..."
           ls -la packages/cli/dist/ || echo "CLI dist not found"
           echo "Testing CLI execution..."
-          node packages/cli/bin/cadr.js --help || echo "CLI help test completed"
+          node packages/cli/dist/index.js --help || echo "CLI help test completed"
       
       - name: Lint
         run: yarn lint

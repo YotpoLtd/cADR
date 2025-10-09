@@ -1,5 +1,5 @@
-import { initCommand } from './commands/init';
-import { analyzeCommand } from './commands/analyze';
+import { initCommand } from './commands/init.js';
+import { analyzeCommand } from './commands/analyze.js';
 
 // Version constants
 const CORE_VERSION = '0.0.1';

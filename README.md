@@ -1,7 +1,6 @@
 # cADR - Continuous Architectural Decision Records
 
 [![Test](https://github.com/YotpoLtd/cADR/actions/workflows/test.yml/badge.svg)](https://github.com/YotpoLtd/cADR/actions/workflows/test.yml)
-[![Coverage](https://img.shields.io/badge/coverage-37%25-orange)](https://github.com/YotpoLtd/cADR/actions/workflows/test.yml)
 [![npm version](https://badge.fury.io/js/cadr-cli.svg)](https://www.npmjs.com/package/cadr-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -234,23 +233,24 @@ yarn test
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for development guidelines, commit conventions, and release process.
 
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests with coverage
+npm test -- --coverage
+
+# Run specific test file
+npm test -- path/to/test.test.ts
+```
+
+Coverage reports are generated in the `coverage/` directory and uploaded as artifacts in GitHub Actions (30-day retention).
+
 ### GitHub Packages
 
 This project uses GitHub Packages for distribution. See [docs/GITHUB_PACKAGES.md](./docs/GITHUB_PACKAGES.md) for detailed configuration instructions.
-
-## Code Coverage
-
-The coverage badge and test coverage table in this README are automatically updated on every merge to `main`:
-
-- **Coverage Badge**: Shows overall line coverage percentage with color coding:
-  - 🟢 Green: ≥80%
-  - 🟡 Yellow: 60-79%
-  - 🟠 Orange: 40-59%
-  - 🔴 Red: <40%
-
-- **Coverage Table**: Detailed breakdown of statements, branches, functions, and lines coverage
-
-The coverage data is generated from Jest test runs and automatically committed by GitHub Actions. View detailed HTML coverage reports in the GitHub Actions artifacts (30-day retention).
 
 ## License
 

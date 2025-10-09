@@ -236,17 +236,49 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for development guidelines, commit conv
 ### Running Tests
 
 ```bash
-# Run all tests
+# Run all tests (unit + integration)
 npm test
 
-# Run tests with coverage
+# Run tests with coverage report
 npm test -- --coverage
+
+# Run only integration tests
+npm test -- --testPathPattern="integration"
+
+# Run only unit tests
+npm test -- --testPathPattern="packages"
 
 # Run specific test file
 npm test -- path/to/test.test.ts
+
+# Watch mode for development
+npm test -- --watch
 ```
 
-Coverage reports are generated in the `coverage/` directory and uploaded as artifacts in GitHub Actions (30-day retention).
+#### Coverage Reports
+
+Coverage reports are automatically generated when running `npm test -- --coverage`:
+
+- **HTML Report**: Open `coverage/lcov-report/index.html` in a browser for detailed, file-by-file coverage
+- **Terminal Summary**: Shows overall percentages after test run
+- **JSON Summary**: `coverage/coverage-summary.json` contains machine-readable data
+
+Coverage includes **both unit and integration tests** - integration tests often provide the majority of meaningful coverage since they test real code paths.
+
+**Viewing Coverage by Test Type:**
+```bash
+# See what coverage integration tests provide
+npm test -- --coverage --testPathPattern="integration"
+
+# See what coverage unit tests provide  
+npm test -- --coverage --testPathPattern="packages"
+
+# Compare the two
+chmod +x scripts/coverage-comparison.sh
+./scripts/coverage-comparison.sh
+```
+
+Coverage artifacts are also uploaded to GitHub Actions (30-day retention).
 
 ### GitHub Packages
 

@@ -61,12 +61,15 @@ export async function getStagedFiles(): Promise<string[]> {
 
 /**
  * Retrieves the full diff content for staged files
+ * Uses minimal context to reduce token usage
  * @returns Promise<string> Full diff content of staged changes
  * @throws GitError When Git is not available or repository is invalid
  */
 export async function getStagedDiff(): Promise<string> {
   try {
-    const { stdout } = await execAsync('git diff --cached');
+    // Use --unified=1 for minimal context (1 line before/after instead of 3)
+    // This significantly reduces token usage while maintaining readability
+    const { stdout } = await execAsync('git diff --cached --unified=1');
     return stdout;
   } catch (error: unknown) {
     // Handle different Git error scenarios (same as getStagedFiles)

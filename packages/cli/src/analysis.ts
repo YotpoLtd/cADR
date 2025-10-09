@@ -68,9 +68,19 @@ export async function runAnalysis(): Promise<void> {
       // eslint-disable-next-line no-console
       console.log('   git add <files>');
       // eslint-disable-next-line no-console
-      console.log('   cadr --analyze\n');
+      console.log('   cadr analyze\n');
       return;
     }
+
+    // Display staged files being analyzed
+    // eslint-disable-next-line no-console
+    console.log(`\n📝 Analyzing ${stagedFiles.length} staged file${stagedFiles.length === 1 ? '' : 's'}:`);
+    stagedFiles.forEach((file: string) => {
+      // eslint-disable-next-line no-console
+      console.log(`  • ${file}`);
+    });
+    // eslint-disable-next-line no-console
+    console.log('');
 
     // Step 3: Get diff content
     let diffContent: string;
@@ -99,18 +109,12 @@ export async function runAnalysis(): Promise<void> {
 
     // Display analysis start
     // eslint-disable-next-line no-console
-    console.log('\n🔍 Analyzing staged changes for architectural significance...\n');
+    console.log('🔍 Analyzing staged changes for architectural significance...\n');
     // eslint-disable-next-line no-console
-    console.log(`📁 Files (${stagedFiles.length}):`);
-    stagedFiles.forEach((file) => {
-      // eslint-disable-next-line no-console
-      console.log(`   ${file}`);
-    });
-    // eslint-disable-next-line no-console
-    console.log(`\n🤖 Sending to ${config.provider} ${config.analysis_model}...\n`);
+    console.log(`🤖 Sending to ${config.provider} ${config.analysis_model}...\n`);
 
     // Step 5: Call LLM for analysis
-    const result = await analyzeChanges(config, {
+    const response = await analyzeChanges(config, {
       file_paths: stagedFiles,
       diff_content: diffContent,
       repository_context: repositoryContext,
@@ -118,23 +122,15 @@ export async function runAnalysis(): Promise<void> {
     });
 
     // Step 6: Display results
-    if (!result) {
+    if (!response.result || response.error) {
       // eslint-disable-next-line no-console
-      console.warn('\n⚠️  Analysis failed');
+      console.error('\n❌ Analysis failed');
       // eslint-disable-next-line no-console
-      console.warn('The LLM analysis could not be completed.');
-      // eslint-disable-next-line no-console
-      console.warn('This could be due to:');
-      // eslint-disable-next-line no-console
-      console.warn('  - API key not set or invalid');
-      // eslint-disable-next-line no-console
-      console.warn('  - Rate limiting');
-      // eslint-disable-next-line no-console
-      console.warn('  - Network timeout');
-      // eslint-disable-next-line no-console
-      console.warn('  - Service unavailable\n');
+      console.error(`\n${response.error || 'Unknown error occurred'}\n`);
       return;
     }
+
+    const result = response.result;
 
     // Display analysis result
     // eslint-disable-next-line no-console

@@ -1,4 +1,3 @@
-// Removed unused commander import
 import { getStagedFiles, GitError } from './git';
 import { loggerInstance } from './logger';
 import { initCommand } from './commands/init';
@@ -8,23 +7,40 @@ import { analyzeCommand } from './commands/analyze';
 const CORE_VERSION = '0.0.1';
 const CLI_VERSION = '0.0.1';
 
-export function getWelcomeMessage(): string {
-  return `🎉 Hello, cADR!
-
-cADR (Continuous Architectural Decision Records) helps you automatically
-capture and document architectural decisions as you code.
-
+export function showHelp(): void {
+  const help = `
+cADR - Continuous Architectural Decision Records
 Version: ${CLI_VERSION}
-Core: ${CORE_VERSION}
-Learn more: https://github.com/YotpoLtd/cADR
 
-Get started by running 'cadr --verbose' to see detailed logs
+USAGE
+  cadr [command] [options]
+
+COMMANDS
+  init              Create a cadr.yaml configuration file
+  analyze           Analyze staged changes and generate ADRs
+  status            Show staged files (default when no command)
+  help              Show this help message
+
+OPTIONS
+  -h, --help        Show help message
+  -v, --version     Show version information
+  --verbose         Enable verbose logging
+
+EXAMPLES
+  cadr init                    # Initialize configuration
+  cadr analyze                 # Analyze staged files
+  cadr status                  # Show current staged files
+  cadr --verbose status        # Show staged files with debug logs
+
+LEARN MORE
+  GitHub: https://github.com/YotpoLtd/cADR
+  Docs:   https://github.com/YotpoLtd/cADR#readme
 `;
+  process.stdout.write(help);
 }
 
-export function displayWelcome(): void {
-  // Use process.stdout.write instead of console.log (Constitution: no console.log)
-  process.stdout.write(getWelcomeMessage());
+export function showVersion(): void {
+  process.stdout.write(`cADR version ${CLI_VERSION} (core: ${CORE_VERSION})\n`);
 }
 
 export async function processStagedFiles(verbose = false): Promise<void> {
@@ -67,22 +83,46 @@ export async function processStagedFiles(verbose = false): Promise<void> {
 // Main execution block - run when module is executed directly
 if (require.main === module) {
   const args = process.argv.slice(2);
+  const command = args[0];
+  const isVerbose = args.includes('--verbose') || args.includes('-v');
   
-  // Handle commands manually
+  // Handle commands
   (async () => {
-    if (args[0] === 'init') {
-      await initCommand();
-    } else if (args[0] === 'analyze') {
-      await analyzeCommand();
-    } else if (args.includes('--analyze')) {
-      await analyzeCommand();
-    } else {
-      // Default behavior - display welcome and staged files
-      displayWelcome();
-      await processStagedFiles(args.includes('--verbose') || args.includes('-v'));
+    // Help flags
+    if (!command || command === 'help' || args.includes('--help') || args.includes('-h')) {
+      showHelp();
+      return;
+    }
+    
+    // Version flag
+    if (args.includes('--version')) {
+      showVersion();
+      return;
+    }
+    
+    // Commands
+    switch (command) {
+      case 'init':
+        await initCommand();
+        break;
+        
+      case 'analyze':
+        await analyzeCommand();
+        break;
+        
+      case 'status':
+        await processStagedFiles(isVerbose);
+        break;
+        
+      default:
+        // Unknown command - show error and help
+        process.stdout.write(`\n❌ Unknown command: ${command}\n`);
+        showHelp();
+        process.exit(1);
     }
   })().catch((error) => {
     // eslint-disable-next-line no-console
-    console.error(error);
+    console.error('Error:', error.message || error);
+    process.exit(1);
   });
 }

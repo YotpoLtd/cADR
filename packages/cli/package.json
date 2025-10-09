@@ -4,10 +4,11 @@
   "description": "Continuous Architectural Decision Records - Automatically capture ADRs as you code",
   "main": "dist/index.js",
   "bin": {
-    "cadr": "./bin/cadr.js"
+    "cadr": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run postbuild",
+    "postbuild": "if [ -f dist/index.js ]; then if ! head -1 dist/index.js | grep -q '^#!/usr/bin/env node$'; then echo '#!/usr/bin/env node' | cat - dist/index.js > dist/index.tmp && mv dist/index.tmp dist/index.js; fi; chmod +x dist/index.js; fi",
     "test": "jest"
   },
   "keywords": [

@@ -6,7 +6,7 @@ const execAsync = promisify(exec);
 
 describe('cADR Happy Flows Integration', () => {
   const testDir = '/tmp/cadr-happy-flows';
-  const cliPath = path.join(__dirname, '../../packages/cli/bin/cadr.js');
+  const cliPath = path.join(__dirname, '../../packages/cli/dist/index.js');
   
   beforeAll(async () => {
     // Create test directory and initialize git
@@ -23,14 +23,20 @@ describe('cADR Happy Flows Integration', () => {
 
   describe('Core Happy Flows', () => {
     test('Complete End-to-End Workflow', async () => {
+      // Create config file
+      const config = `provider: openai
+api_key_env: OPENAI_API_KEY
+analysis_model: gpt-4
+timeout_seconds: 30`;
+      await execAsync(`cd ${testDir} && echo '${config}' > cadr.yaml`);
+      
       // Test the complete workflow: stage files and analyze
       await execAsync(`cd ${testDir} && echo 'export function authenticateUser(token: string) { return jwt.verify(token); }' > auth.ts`);
       await execAsync(`cd ${testDir} && echo 'export class UserService { async getUser(id: string) { return { id, name: "Test" }; } }' > user.ts`);
       await execAsync(`cd ${testDir} && git add auth.ts user.ts`);
       
       // Analyze
-      const { stdout: analyzeOutput } = await execAsync(`cd ${testDir} && node ${cliPath} --analyze`);
-      expect(analyzeOutput).toContain('Hello, cADR!');
+      const { stdout: analyzeOutput } = await execAsync(`cd ${testDir} && node ${cliPath} analyze`);
       expect(analyzeOutput).toContain('auth.ts');
       expect(analyzeOutput).toContain('user.ts');
     });

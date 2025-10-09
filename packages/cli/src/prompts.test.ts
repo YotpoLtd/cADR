@@ -29,6 +29,29 @@ describe('Prompts Module', () => {
         prompt.includes('security')
       ).toBe(true);
     });
+
+    test('prompt includes all specific architectural significance criteria', () => {
+      const prompt = ANALYSIS_PROMPT_V1.toLowerCase();
+      
+      // Must include all key criteria
+      expect(prompt).toContain('dependency');
+      expect(prompt).toContain('infrastructure');
+      expect(prompt).toContain('api contract');
+      expect(prompt).toContain('data schema');
+      expect(prompt).toContain('authentication');
+      expect(prompt).toContain('authorization');
+      expect(prompt).toContain('cross-cutting');
+    });
+
+    test('prompt specifies empty string for non-significant changes', () => {
+      expect(ANALYSIS_PROMPT_V1).toContain('empty string');
+    });
+
+    test('prompt emphasizes strict JSON output format', () => {
+      expect(ANALYSIS_PROMPT_V1).toContain('minified');
+      expect(ANALYSIS_PROMPT_V1).toContain('no preamble');
+      expect(ANALYSIS_PROMPT_V1).toContain('no markdown');
+    });
   });
 
   describe('formatPrompt', () => {

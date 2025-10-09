@@ -56,12 +56,13 @@ diff --git a/src/auth.ts b/src/auth.ts
         }
       } as unknown as jest.Mocked<OpenAI>));
 
-      const result = await analyzeChanges(mockConfig, mockRequest);
+      const response = await analyzeChanges(mockConfig, mockRequest);
 
-      expect(result).not.toBeNull();
-      expect(result?.is_significant).toBe(true);
-      expect(result?.reason).toContain('authentication');
-      expect(result?.timestamp).toBeDefined();
+      expect(response.result).not.toBeNull();
+      expect(response.error).toBeUndefined();
+      expect(response.result?.is_significant).toBe(true);
+      expect(response.result?.reason).toContain('authentication');
+      expect(response.result?.timestamp).toBeDefined();
       expect(mockCreate).toHaveBeenCalledWith(
         expect.objectContaining({
           model: 'gpt-4',
@@ -94,11 +95,69 @@ diff --git a/src/auth.ts b/src/auth.ts
         }
       } as unknown as jest.Mocked<OpenAI>));
 
-      const result = await analyzeChanges(mockConfig, mockRequest);
+      const response = await analyzeChanges(mockConfig, mockRequest);
 
-      expect(result).not.toBeNull();
-      expect(result?.is_significant).toBe(false);
-      expect(result?.reason).toContain('documentation');
+      expect(response.result).not.toBeNull();
+      expect(response.error).toBeUndefined();
+      expect(response.result?.is_significant).toBe(false);
+      expect(response.result?.reason).toContain('documentation');
+    });
+
+    test('accepts empty reason when change is not significant', async () => {
+      const mockResponse = {
+        choices: [{
+          message: {
+            content: JSON.stringify({
+              is_significant: false,
+              reason: ''
+            })
+          }
+        }]
+      };
+
+      const mockCreate = jest.fn().mockResolvedValue(mockResponse);
+      (OpenAI as jest.MockedClass<typeof OpenAI>).mockImplementation(() => ({
+        chat: {
+          completions: {
+            create: mockCreate
+          }
+        }
+      } as unknown as jest.Mocked<OpenAI>));
+
+      const response = await analyzeChanges(mockConfig, mockRequest);
+
+      expect(response.result).not.toBeNull();
+      expect(response.error).toBeUndefined();
+      expect(response.result?.is_significant).toBe(false);
+      expect(response.result?.reason).toBe('');
+    });
+
+    test('rejects empty reason when change is significant', async () => {
+      const mockResponse = {
+        choices: [{
+          message: {
+            content: JSON.stringify({
+              is_significant: true,
+              reason: ''
+            })
+          }
+        }]
+      };
+
+      const mockCreate = jest.fn().mockResolvedValue(mockResponse);
+      (OpenAI as jest.MockedClass<typeof OpenAI>).mockImplementation(() => ({
+        chat: {
+          completions: {
+            create: mockCreate
+          }
+        }
+      } as unknown as jest.Mocked<OpenAI>));
+
+      const response = await analyzeChanges(mockConfig, mockRequest);
+
+      expect(response.result).toBeNull();
+      expect(response.error).toBeDefined();
+      expect(response.error).toContain('no reason');
     });
 
     test('handles API failures gracefully (fail-open)', async () => {
@@ -111,10 +170,12 @@ diff --git a/src/auth.ts b/src/auth.ts
         }
       } as unknown as jest.Mocked<OpenAI>));
 
-      const result = await analyzeChanges(mockConfig, mockRequest);
+      const response = await analyzeChanges(mockConfig, mockRequest);
 
-      // Fail-open: should return null, not throw
-      expect(result).toBeNull();
+      // Fail-open: should return error, not throw
+      expect(response.result).toBeNull();
+      expect(response.error).toBeDefined();
+      expect(response.error).toContain('API error');
       expect(mockCreate).toHaveBeenCalled();
     });
 
@@ -131,9 +192,11 @@ diff --git a/src/auth.ts b/src/auth.ts
         }
       } as unknown as jest.Mocked<OpenAI>));
 
-      const result = await analyzeChanges(mockConfig, mockRequest);
+      const response = await analyzeChanges(mockConfig, mockRequest);
 
-      expect(result).toBeNull();
+      expect(response.result).toBeNull();
+      expect(response.error).toBeDefined();
+      expect(response.error).toContain('Rate limit exceeded');
     });
 
     test('handles timeout gracefully', async () => {
@@ -149,9 +212,10 @@ diff --git a/src/auth.ts b/src/auth.ts
         }
       } as unknown as jest.Mocked<OpenAI>));
 
-      const result = await analyzeChanges(mockConfig, mockRequest);
+      const response = await analyzeChanges(mockConfig, mockRequest);
 
-      expect(result).toBeNull();
+      expect(response.result).toBeNull();
+      expect(response.error).toBeDefined();
     });
 
     test('validates response format and rejects invalid JSON', async () => {
@@ -172,9 +236,10 @@ diff --git a/src/auth.ts b/src/auth.ts
         }
       } as unknown as jest.Mocked<OpenAI>));
 
-      const result = await analyzeChanges(mockConfig, mockRequest);
+      const response = await analyzeChanges(mockConfig, mockRequest);
 
-      expect(result).toBeNull();
+      expect(response.result).toBeNull();
+      expect(response.error).toBeDefined();
     });
 
     test('validates response format and rejects missing fields', async () => {
@@ -198,9 +263,10 @@ diff --git a/src/auth.ts b/src/auth.ts
         }
       } as unknown as jest.Mocked<OpenAI>));
 
-      const result = await analyzeChanges(mockConfig, mockRequest);
+      const response = await analyzeChanges(mockConfig, mockRequest);
 
-      expect(result).toBeNull();
+      expect(response.result).toBeNull();
+      expect(response.error).toBeDefined();
     });
 
     test('respects timeout configuration', async () => {
@@ -242,9 +308,10 @@ diff --git a/src/auth.ts b/src/auth.ts
     test('returns null when API key is missing', async () => {
       delete process.env.OPENAI_API_KEY;
 
-      const result = await analyzeChanges(mockConfig, mockRequest);
+      const response = await analyzeChanges(mockConfig, mockRequest);
 
-      expect(result).toBeNull();
+      expect(response.result).toBeNull();
+      expect(response.error).toBeDefined();
     });
 
     test('includes confidence score when provided by LLM', async () => {
@@ -269,10 +336,11 @@ diff --git a/src/auth.ts b/src/auth.ts
         }
       } as unknown as jest.Mocked<OpenAI>));
 
-      const result = await analyzeChanges(mockConfig, mockRequest);
+      const response = await analyzeChanges(mockConfig, mockRequest);
 
-      expect(result).not.toBeNull();
-      expect(result?.confidence).toBe(0.95);
+      expect(response.result).not.toBeNull();
+      expect(response.error).toBeUndefined();
+      expect(response.result?.confidence).toBe(0.95);
     });
   });
 

@@ -23,6 +23,10 @@ describe('Analysis Orchestration', () => {
     reason: 'Introduces new authentication system',
     timestamp: new Date().toISOString()
   };
+  const mockAnalysisResponse = {
+    result: mockAnalysisResult,
+    error: undefined
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -30,7 +34,7 @@ describe('Analysis Orchestration', () => {
     (config.loadConfig as jest.Mock).mockResolvedValue(mockConfig);
     (git.getStagedFiles as jest.Mock).mockResolvedValue(mockStagedFiles);
     (git.getStagedDiff as jest.Mock).mockResolvedValue(mockDiff);
-    (llm.analyzeChanges as jest.Mock).mockResolvedValue(mockAnalysisResult);
+    (llm.analyzeChanges as jest.Mock).mockResolvedValue(mockAnalysisResponse);
   });
 
   describe('runAnalysis', () => {
@@ -56,7 +60,10 @@ describe('Analysis Orchestration', () => {
     });
 
     test('handles LLM analysis failure gracefully', async () => {
-      (llm.analyzeChanges as jest.Mock).mockResolvedValue(null);
+      (llm.analyzeChanges as jest.Mock).mockResolvedValue({
+        result: null,
+        error: 'API key not found: OPENAI_API_KEY environment variable is not set'
+      });
       
       await expect(runAnalysis()).resolves.not.toThrow();
     });

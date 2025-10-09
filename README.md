@@ -110,11 +110,11 @@ cadr --analyze
 **Example output for significant changes:**
 
 ```text
-🔍 Analyzing staged changes for architectural significance...
+📝 Analyzing 2 staged files:
+  • src/auth/login.ts
+  • src/auth/session.ts
 
-📁 Files (2):
-   src/auth/login.ts
-   src/auth/session.ts
+🔍 Analyzing staged changes for architectural significance...
 
 🤖 Sending to openai gpt-4...
 
@@ -132,11 +132,11 @@ cadr --analyze
 **Example output for non-significant changes:**
 
 ```text
-🔍 Analyzing staged changes for architectural significance...
+📝 Analyzing 2 staged files:
+  • README.md
+  • package.json
 
-📁 Files (2):
-   README.md
-   package.json
+🔍 Analyzing staged changes for architectural significance...
 
 🤖 Sending to openai gpt-4...
 
@@ -185,13 +185,25 @@ The `cadr.yaml` file configures the LLM analysis:
 
 ```yaml
 provider: openai
-analysis_model: gpt-4
+analysis_model: gpt-4              # or gpt-4-turbo-preview for 128k context
 api_key_env: OPENAI_API_KEY
 timeout_seconds: 15
 ignore_patterns:
   - "*.md"
   - "package-lock.json"
+  - "yarn.lock"
 ```
+
+### Configuration Options
+
+- **`provider`**: LLM provider (currently only `openai` supported)
+- **`analysis_model`**: OpenAI model to use
+  - `gpt-4`: 8k context window (default)
+  - `gpt-4-turbo-preview`: 128k context window (recommended for large diffs)
+  - `gpt-4-1106-preview`: 128k context window
+- **`api_key_env`**: Environment variable containing your API key
+- **`timeout_seconds`**: Request timeout (1-60 seconds)
+- **`ignore_patterns`**: Files to exclude from analysis (glob patterns)
 
 ## Development
 

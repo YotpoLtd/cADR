@@ -1,4 +1,9 @@
-import { detectTTY, TTYEnvironment } from './tty';
+import { detectTTY } from './tty';
+
+// Type for mocking process.stdout.isTTY in tests
+interface MockableWriteStream {
+  isTTY?: boolean;
+}
 
 describe('TTY Detection', () => {
   let originalTTY: boolean | undefined;
@@ -12,7 +17,7 @@ describe('TTY Detection', () => {
 
   afterEach(() => {
     // Restore original values
-    (process.stdout as any).isTTY = originalTTY;
+    (process.stdout as MockableWriteStream).isTTY = originalTTY;
     if (originalCI !== undefined) {
       process.env.CI = originalCI;
     } else {
@@ -22,7 +27,7 @@ describe('TTY Detection', () => {
 
   describe('isTTY detection', () => {
     test('returns isTTY=true when process.stdout.isTTY is true', () => {
-      (process.stdout as any).isTTY = true;
+      (process.stdout as MockableWriteStream).isTTY = true;
       delete process.env.CI;
 
       const result = detectTTY();
@@ -30,7 +35,7 @@ describe('TTY Detection', () => {
     });
 
     test('returns isTTY=false when process.stdout.isTTY is false', () => {
-      (process.stdout as any).isTTY = false;
+      (process.stdout as MockableWriteStream).isTTY = false;
       delete process.env.CI;
 
       const result = detectTTY();
@@ -38,7 +43,7 @@ describe('TTY Detection', () => {
     });
 
     test('returns isTTY=false when process.stdout.isTTY is undefined', () => {
-      (process.stdout as any).isTTY = undefined;
+      (process.stdout as MockableWriteStream).isTTY = undefined;
       delete process.env.CI;
 
       const result = detectTTY();
@@ -48,7 +53,7 @@ describe('TTY Detection', () => {
 
   describe('CI detection', () => {
     test('returns isCI=true when process.env.CI is "true"', () => {
-      (process.stdout as any).isTTY = true;
+      (process.stdout as MockableWriteStream).isTTY = true;
       process.env.CI = 'true';
 
       const result = detectTTY();
@@ -56,7 +61,7 @@ describe('TTY Detection', () => {
     });
 
     test('returns isCI=true when process.env.CI is "1"', () => {
-      (process.stdout as any).isTTY = true;
+      (process.stdout as MockableWriteStream).isTTY = true;
       process.env.CI = '1';
 
       const result = detectTTY();
@@ -64,7 +69,7 @@ describe('TTY Detection', () => {
     });
 
     test('returns isCI=false when process.env.CI is undefined', () => {
-      (process.stdout as any).isTTY = true;
+      (process.stdout as MockableWriteStream).isTTY = true;
       delete process.env.CI;
 
       const result = detectTTY();
@@ -72,7 +77,7 @@ describe('TTY Detection', () => {
     });
 
     test('returns isCI=false when process.env.CI is other values', () => {
-      (process.stdout as any).isTTY = true;
+      (process.stdout as MockableWriteStream).isTTY = true;
       process.env.CI = 'false';
 
       const result = detectTTY();
@@ -82,7 +87,7 @@ describe('TTY Detection', () => {
 
   describe('shouldShowPrompt logic', () => {
     test('returns shouldShowPrompt=true when isTTY=true and isCI=false', () => {
-      (process.stdout as any).isTTY = true;
+      (process.stdout as MockableWriteStream).isTTY = true;
       delete process.env.CI;
 
       const result = detectTTY();
@@ -92,7 +97,7 @@ describe('TTY Detection', () => {
     });
 
     test('returns shouldShowPrompt=false when isTTY=false', () => {
-      (process.stdout as any).isTTY = false;
+      (process.stdout as MockableWriteStream).isTTY = false;
       delete process.env.CI;
 
       const result = detectTTY();
@@ -100,7 +105,7 @@ describe('TTY Detection', () => {
     });
 
     test('returns shouldShowPrompt=false when isCI=true (even if isTTY=true)', () => {
-      (process.stdout as any).isTTY = true;
+      (process.stdout as MockableWriteStream).isTTY = true;
       process.env.CI = 'true';
 
       const result = detectTTY();
@@ -110,7 +115,7 @@ describe('TTY Detection', () => {
     });
 
     test('returns shouldShowPrompt=false when both isTTY=false and isCI=true', () => {
-      (process.stdout as any).isTTY = false;
+      (process.stdout as MockableWriteStream).isTTY = false;
       process.env.CI = 'true';
 
       const result = detectTTY();

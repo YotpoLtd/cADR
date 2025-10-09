@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
-import { Box, Text, useInput, render } from 'ink';
+const React = require('react');
+const { useState } = React;
+const { Box, Text, useInput, render } = require('ink');
 
 export interface AnalysisPromptProps {
   reason: string;
   onSubmit: (createAdr: boolean) => void;
 }
 
-function Prompt({ reason, onSubmit }: AnalysisPromptProps) {
-  const [selected, setSelected] = useState<'create' | 'skip'>('skip');
+interface KeyInfo {
+  escape?: boolean;
+  leftArrow?: boolean;
+  rightArrow?: boolean;
+  return?: boolean;
+}
 
-  useInput((input: string, key: any) => {
+function Prompt({ reason, onSubmit }: AnalysisPromptProps) {
+  const [selected, setSelected] = (useState as any)('skip' as 'create' | 'skip');
+
+  useInput((input: string, key: KeyInfo) => {
     const i = (input || '').toLowerCase();
     
     // Direct shortcuts
@@ -18,7 +26,7 @@ function Prompt({ reason, onSubmit }: AnalysisPromptProps) {
     
     // Menu navigation
     else if (key.leftArrow || key.rightArrow) {
-      setSelected(s => (s === 'create' ? 'skip' : 'create'));
+      setSelected((s: 'create' | 'skip') => (s === 'create' ? 'skip' : 'create'));
     }
     else if (key.return) {
       onSubmit(selected === 'create');

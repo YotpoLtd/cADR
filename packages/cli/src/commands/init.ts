@@ -70,7 +70,11 @@ export async function initCommand(): Promise<void> {
       // eslint-disable-next-line no-console
       console.warn(`   export ${config.api_key_env}="your-api-key-here"`);
       // eslint-disable-next-line no-console
-      console.warn('\n   Get your API key from: https://platform.openai.com/api-keys');
+      const providerLink = config.provider === 'gemini'
+        ? 'https://aistudio.google.com/app/apikey'
+        : 'https://platform.openai.com/api-keys';
+      // eslint-disable-next-line no-console
+      console.warn(`\n   Get your API key from: ${providerLink}`);
     }
 
     // eslint-disable-next-line no-console

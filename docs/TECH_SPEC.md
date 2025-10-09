@@ -21,7 +21,8 @@ graph TD
 
 * **`cadr-cli`:** A self-contained CLI package containing all business logic.
   * `src/git.ts`: Functions for interacting with the git CLI.
-  * `src/llm.ts`: LangChain-powered clients for analysis and generation.
+* `src/llm.ts`: Provider-based LLM client orchestrator for analysis.
+* `src/providers/*`: Pluggable provider implementations (`openai`, `gemini`).
   * `src/prompts.ts`: Version-controlled prompt templates.
   * `src/adr.ts`: Logic for creating ADR files.
   * **Key Exports:** `analyze(diff): Promise<AnalysisResult>`, `generate(diff): Promise<string>`

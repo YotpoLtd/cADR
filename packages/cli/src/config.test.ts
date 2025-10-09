@@ -65,7 +65,7 @@ describe('Configuration Module', () => {
       const result = validateConfig(invalidConfig);
 
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('provider must be one of the following values: openai');
+      expect(result.errors.join('\n')).toMatch(/provider must be one of the following values: openai, gemini/);
     });
 
     test('rejects missing required fields', () => {

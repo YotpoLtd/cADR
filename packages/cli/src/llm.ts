@@ -1,12 +1,11 @@
 /**
  * LLM Client Module
  *
- * OpenAI client wrapper for analyzing code changes.
+ * Provider-based wrapper for analyzing code changes.
  * Implements fail-open error handling per constitution requirements.
  */
 
-import OpenAI from 'openai';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { getProvider } from './providers';
 import { AnalysisConfig } from './config';
 import { loggerInstance as logger } from './logger';
 
@@ -89,74 +88,12 @@ export async function analyzeChanges(
       });
     }
 
-    let responseContent: string | undefined;
-    if (config.provider === 'openai') {
-      // Initialize OpenAI client
-      const openai = new OpenAI({
-        apiKey,
-        timeout: config.timeout_seconds * 1000, // Convert to milliseconds
-      });
-      // Call OpenAI Chat Completion API
-      const completion = await openai.chat.completions.create(
-        {
-          model: config.analysis_model,
-          messages: [
-            {
-              role: 'system',
-              content: 'You are an expert software architect analyzing code changes.',
-            },
-            {
-              role: 'user',
-              content: request.analysis_prompt,
-            },
-          ],
-          temperature: 0.3, // Lower temperature for more consistent analysis
-          max_tokens: 500,
-        },
-        {
-          timeout: config.timeout_seconds * 1000,
-        }
-      );
-      responseContent = completion.choices[0]?.message?.content;
-    } else if (config.provider === 'gemini') {
-      // Initialize Google Generative AI (Gemini) client
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({
-        model: config.analysis_model,
-        systemInstruction: 'You are an expert software architect analyzing code changes.'
-      });
-
-      // Gemini SDK does not support per-call timeout directly; apply manual timeout
-      const timeoutMs = config.timeout_seconds * 1000;
-      const generatePromise = model.generateContent({
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: request.analysis_prompt }],
-          },
-        ],
-        generationConfig: {
-          temperature: 0.3,
-          maxOutputTokens: 500,
-        },
-      });
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        const t = setTimeout(() => {
-          const err = new Error('Request timeout') as Error & { code: string };
-          err.code = 'ETIMEDOUT';
-          reject(err);
-        }, timeoutMs);
-        // No need to expose handle; resolved generatePromise will clear below
-        (generatePromise as unknown as Promise<unknown>).finally(() => clearTimeout(t));
-      });
-
-      const result = await Promise.race([generatePromise, timeoutPromise]) as Awaited<typeof generatePromise>;
-      const text = result?.response?.text?.();
-      responseContent = typeof text === 'string' ? text : undefined;
-    } else {
-      // Unknown provider guard (should not happen due to schema)
-      return { result: null, error: `Unsupported provider: ${String((config as any).provider)}` };
-    }
+    const provider = getProvider(config.provider);
+    const responseContent = await provider.analyze(request.analysis_prompt, {
+      apiKey,
+      model: config.analysis_model,
+      timeoutMs: config.timeout_seconds * 1000,
+    });
 
     if (!responseContent) {
       logger.warn('No response content from LLM', { provider: config.provider });

@@ -376,7 +376,7 @@ diff --git a/src/auth.ts b/src/auth.ts
         api_key_env: 'GOOGLE_GENERATIVE_AI_API_KEY',
         timeout_seconds: 1,
       };
-      const slowPromise = new Promise((resolve) => setTimeout(() => resolve({
+      const slowPromise: Promise<any> = new Promise((resolve) => setTimeout(() => resolve({
         response: { text: () => JSON.stringify({ is_significant: true, reason: 'Test' }) }
       }), 3000));
       (GoogleGenerativeAI as unknown as jest.Mock).mockImplementation(() => ({

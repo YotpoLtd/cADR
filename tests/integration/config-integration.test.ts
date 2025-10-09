@@ -62,7 +62,7 @@ describe('Configuration Integration', () => {
     
     const result = validateConfig(invalidConfig);
     expect(result.valid).toBe(false);
-    expect(result.errors).toContain('provider must be one of the following values: openai');
+    expect(result.errors.join('\n')).toMatch(/provider must be one of the following values: openai, gemini/);
   });
 
   test('handles missing configuration file', async () => {

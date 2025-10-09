@@ -27,7 +27,7 @@ A change is considered architecturally significant if it:
 - Alters authentication, authorization, or other core security patterns.
 - Modifies cross-cutting concerns like logging, observability, or CI/CD pipelines.
 
-Respond ONLY with a single, minified JSON object. Do not include any preamble, conversation, or markdown formatting. The JSON object must adhere to the following schema:
+Respond ONLY with a single, minified JSON object with no preamble, no markdown, and no additional text. The JSON object must adhere to the following schema:
 {"is_significant": boolean, "reason": string}
 
 The "reason" should be a concise, one-sentence explanation for your decision, suitable for showing to a developer. If the change is not significant, the reason should be an empty string.

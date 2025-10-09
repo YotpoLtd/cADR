@@ -8,7 +8,7 @@ import { loggerInstance as logger } from './logger';
  * Configuration schema for LLM analysis
  */
 export interface AnalysisConfig {
-  provider: 'openai';
+  provider: 'openai' | 'gemini';
   analysis_model: string;
   api_key_env: string;
   timeout_seconds: number;
@@ -27,7 +27,10 @@ export interface ConfigValidationResult {
  * Yup validation schema for configuration
  */
 const configSchema = yup.object({
-  provider: yup.string().oneOf(['openai']).required('Provider must be "openai"'),
+  provider: yup
+    .string()
+    .oneOf(['openai', 'gemini'])
+    .required('Provider must be one of: "openai", "gemini"'),
   analysis_model: yup.string().required('Analysis model is required'),
   api_key_env: yup.string().required('API key environment variable name is required'),
   timeout_seconds: yup
@@ -139,8 +142,13 @@ export async function createConfig(configPath: string): Promise<AnalysisConfig |
 
     // Prompt for configuration values
     const provider = await prompt(rl, 'LLM Provider', 'openai');
-    const analysis_model = await prompt(rl, 'Analysis Model', 'gpt-4');
-    const api_key_env = await prompt(rl, 'API Key Environment Variable', 'OPENAI_API_KEY');
+
+    // Choose sensible defaults based on provider
+    const defaultModel = provider === 'gemini' ? 'gemini-1.5-pro' : 'gpt-4';
+    const defaultApiKeyEnv = provider === 'gemini' ? 'GOOGLE_GENERATIVE_AI_API_KEY' : 'OPENAI_API_KEY';
+
+    const analysis_model = await prompt(rl, 'Analysis Model', defaultModel);
+    const api_key_env = await prompt(rl, 'API Key Environment Variable', defaultApiKeyEnv);
     const timeoutInput = await prompt(rl, 'Timeout (seconds)', '15');
     const timeout_seconds = parseInt(timeoutInput, 10) || 15;
 
@@ -159,7 +167,7 @@ export async function createConfig(configPath: string): Promise<AnalysisConfig |
 
     // Build configuration object
     const config: AnalysisConfig = {
-      provider: provider as 'openai',
+      provider: provider as 'openai' | 'gemini',
       analysis_model,
       api_key_env,
       timeout_seconds,

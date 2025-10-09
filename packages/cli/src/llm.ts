@@ -6,6 +6,7 @@
  */
 
 import OpenAI from 'openai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { AnalysisConfig } from './config';
 import { loggerInstance as logger } from './logger';
 
@@ -69,16 +70,11 @@ export async function analyzeChanges(
       };
     }
 
-    // Initialize OpenAI client
-    const openai = new OpenAI({
-      apiKey,
-      timeout: config.timeout_seconds * 1000, // Convert to milliseconds
-    });
-
     // Estimate tokens for logging and validation
     const estimatedTokens = estimateTokens(request.analysis_prompt);
     
-    logger.info('Sending analysis request to OpenAI', {
+    logger.info('Sending analysis request to LLM', {
+      provider: config.provider,
       model: config.analysis_model,
       file_count: request.file_paths.length,
       estimated_tokens: estimatedTokens,
@@ -88,36 +84,82 @@ export async function analyzeChanges(
     if (estimatedTokens > 7000) {
       logger.warn('High token count detected', {
         estimated_tokens: estimatedTokens,
+        provider: config.provider,
         model: config.analysis_model,
       });
     }
 
-    // Call OpenAI Chat Completion API
-    const completion = await openai.chat.completions.create(
-      {
+    let responseContent: string | undefined;
+    if (config.provider === 'openai') {
+      // Initialize OpenAI client
+      const openai = new OpenAI({
+        apiKey,
+        timeout: config.timeout_seconds * 1000, // Convert to milliseconds
+      });
+      // Call OpenAI Chat Completion API
+      const completion = await openai.chat.completions.create(
+        {
+          model: config.analysis_model,
+          messages: [
+            {
+              role: 'system',
+              content: 'You are an expert software architect analyzing code changes.',
+            },
+            {
+              role: 'user',
+              content: request.analysis_prompt,
+            },
+          ],
+          temperature: 0.3, // Lower temperature for more consistent analysis
+          max_tokens: 500,
+        },
+        {
+          timeout: config.timeout_seconds * 1000,
+        }
+      );
+      responseContent = completion.choices[0]?.message?.content;
+    } else if (config.provider === 'gemini') {
+      // Initialize Google Generative AI (Gemini) client
+      const genAI = new GoogleGenerativeAI(apiKey);
+      const model = genAI.getGenerativeModel({
         model: config.analysis_model,
-        messages: [
-          {
-            role: 'system',
-            content: 'You are an expert software architect analyzing code changes.',
-          },
+        systemInstruction: 'You are an expert software architect analyzing code changes.'
+      });
+
+      // Gemini SDK does not support per-call timeout directly; apply manual timeout
+      const timeoutMs = config.timeout_seconds * 1000;
+      const generatePromise = model.generateContent({
+        contents: [
           {
             role: 'user',
-            content: request.analysis_prompt,
+            parts: [{ text: request.analysis_prompt }],
           },
         ],
-        temperature: 0.3, // Lower temperature for more consistent analysis
-        max_tokens: 500,
-      },
-      {
-        timeout: config.timeout_seconds * 1000,
-      }
-    );
+        generationConfig: {
+          temperature: 0.3,
+          maxOutputTokens: 500,
+        },
+      });
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        const t = setTimeout(() => {
+          const err = new Error('Request timeout') as Error & { code: string };
+          err.code = 'ETIMEDOUT';
+          reject(err);
+        }, timeoutMs);
+        // No need to expose handle; resolved generatePromise will clear below
+        (generatePromise as unknown as Promise<unknown>).finally(() => clearTimeout(t));
+      });
 
-    // Extract response content
-    const responseContent = completion.choices[0]?.message?.content;
+      const result = await Promise.race([generatePromise, timeoutPromise]) as Awaited<typeof generatePromise>;
+      const text = result?.response?.text?.();
+      responseContent = typeof text === 'string' ? text : undefined;
+    } else {
+      // Unknown provider guard (should not happen due to schema)
+      return { result: null, error: `Unsupported provider: ${String((config as any).provider)}` };
+    }
+
     if (!responseContent) {
-      logger.warn('No response content from OpenAI');
+      logger.warn('No response content from LLM', { provider: config.provider });
       return {
         result: null,
         error: 'No response content from LLM'
@@ -144,7 +186,7 @@ export async function analyzeChanges(
       
       parsedResponse = JSON.parse(jsonContent);
     } catch (parseError) {
-      logger.warn('Failed to parse OpenAI response as JSON', {
+      logger.warn('Failed to parse LLM response as JSON', {
         error: parseError,
         response: responseContent,
       });
@@ -159,7 +201,7 @@ export async function analyzeChanges(
       typeof parsedResponse.is_significant !== 'boolean' ||
       typeof parsedResponse.reason !== 'string'
     ) {
-      logger.warn('Invalid response format from OpenAI', {
+      logger.warn('Invalid response format from LLM', {
         response: parsedResponse,
       });
       return {
@@ -209,7 +251,7 @@ export async function analyzeChanges(
     // Check for specific error types and provide helpful messages
     if (errorObj.status === 401) {
       errorMessage = 'Invalid API key - please check your API key configuration';
-      logger.warn('OpenAI API authentication failed', { error: errorObj });
+      logger.warn('LLM API authentication failed', { error: errorObj });
     } else if (errorObj.status === 400 && errorObj.message?.includes('maximum context length')) {
       // Extract token counts from error message if available
       const tokenMatch = errorObj.message.match(/(\d+)\s+tokens/g);
@@ -218,22 +260,22 @@ export async function analyzeChanges(
         '  • Use gpt-4-turbo (128k context) in cadr.yaml:\n' +
         '    analysis_model: gpt-4-turbo-preview\n' +
         '  • Add ignore patterns to filter large files';
-      logger.warn('OpenAI context length exceeded', { 
+      logger.warn('LLM context length exceeded', { 
         error: errorObj,
         tokens: tokenMatch,
       });
     } else if (errorObj.status === 429) {
       errorMessage = 'Rate limit exceeded - please try again later or check your API quota';
-      logger.warn('OpenAI API rate limit exceeded', { error: errorObj });
+      logger.warn('LLM API rate limit exceeded', { error: errorObj });
     } else if (errorObj.code === 'ETIMEDOUT' || errorObj.message?.includes('timeout')) {
       errorMessage = `Request timeout (${config.timeout_seconds}s) - the LLM took too long to respond`;
-      logger.warn('OpenAI API request timeout', { error: errorObj });
+      logger.warn('LLM API request timeout', { error: errorObj });
     } else if (errorObj.code === 'ENOTFOUND' || errorObj.message?.includes('ENOTFOUND')) {
-      errorMessage = 'Network error - unable to reach OpenAI API (check internet connection)';
-      logger.warn('OpenAI API network error', { error: errorObj });
+      errorMessage = 'Network error - unable to reach LLM API (check internet connection)';
+      logger.warn('LLM API network error', { error: errorObj });
     } else {
       errorMessage = `API error: ${errorObj.message || 'Unknown error occurred'}`;
-      logger.warn('OpenAI API request failed', { error: errorObj });
+      logger.warn('LLM API request failed', { error: errorObj });
     }
 
     return { result: null, error: errorMessage };

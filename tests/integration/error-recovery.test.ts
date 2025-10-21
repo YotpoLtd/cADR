@@ -46,8 +46,8 @@ timeout_seconds: 30
         // Set invalid API key
         process.env.INVALID_API_KEY = 'invalid-key-12345';
 
-        // Should not throw - fail open
-        const result = await execAsync(`cd ${testDir} && node ${cliPath} analyze`);
+        // Should not throw - fail open (provide 'no' input to avoid hanging on prompts)
+        const result = await execAsync(`cd ${testDir} && echo 'no' | node ${cliPath} analyze`);
         const output = result.stdout + result.stderr;
         
         // Should show error but exit cleanly
@@ -72,9 +72,9 @@ analysis_model: gpt-4
 timeout_seconds: 30
 `);
 
-        // Ensure env var doesn't exist
+        // Ensure env var doesn't exist (provide 'no' input to avoid hanging on prompts)
         const result = await execAsync(
-          `cd ${testDir} && unset TOTALLY_MISSING_KEY && node ${cliPath} analyze`
+          `cd ${testDir} && unset TOTALLY_MISSING_KEY && echo 'no' | node ${cliPath} analyze`
         );
         const output = result.stdout + result.stderr;
         
@@ -101,7 +101,7 @@ timeout_seconds: 1
         process.env.OPENAI_API_KEY = 'fake-key-for-timeout-test';
 
         // Should handle timeout gracefully
-        const result = await execAsync(`cd ${testDir} && node ${cliPath} analyze`);
+        const result = await execAsync(`cd ${testDir} && echo 'no' | node ${cliPath} analyze`);
         const output = result.stdout + result.stderr;
         
         // Should either timeout or complete, but not crash
@@ -123,7 +123,7 @@ timeout_seconds: 1
         // Write completely invalid YAML
         writeFileSync(path.join(testDir, 'cadr.yaml'), `{{{invalid yaml syntax]]}`);
 
-        const result = await execAsync(`cd ${testDir} && node ${cliPath} analyze`);
+        const result = await execAsync(`cd ${testDir} && echo 'no' | node ${cliPath} analyze`);
         const output = result.stdout + result.stderr;
         
         // Should show error but not crash
@@ -139,7 +139,7 @@ timeout_seconds: 1
       try {
         writeFileSync(path.join(testDir, 'cadr.yaml'), '');
 
-        const result = await execAsync(`cd ${testDir} && node ${cliPath} analyze`);
+        const result = await execAsync(`cd ${testDir} && echo 'no' | node ${cliPath} analyze`);
         const output = result.stdout + result.stderr;
         
         expect(output).toMatch(/configuration|error|required/i);
@@ -165,7 +165,7 @@ analysis_model: gpt-4
 timeout_seconds: 30
 `);
 
-        const result = await execAsync(`cd ${testDir} && node ${cliPath} analyze`);
+        const result = await execAsync(`cd ${testDir} && echo 'no' | node ${cliPath} analyze`);
         const output = result.stdout + result.stderr;
         
         // Should show git error but not crash
@@ -199,7 +199,7 @@ timeout_seconds: 30
 
         process.env.OPENAI_API_KEY = 'fake-key';
 
-        const result = await execAsync(`cd ${testDir} && node ${cliPath} analyze`);
+        const result = await execAsync(`cd ${testDir} && echo 'no' | node ${cliPath} analyze`);
         const output = result.stdout + result.stderr;
         
         // Should handle large number of files (either succeed or fail gracefully)
@@ -230,7 +230,7 @@ timeout_seconds: 30
 
         process.env.OPENAI_API_KEY = 'fake-key';
 
-        const result = await execAsync(`cd ${testDir} && node ${cliPath} analyze`);
+        const result = await execAsync(`cd ${testDir} && echo 'no' | node ${cliPath} analyze`);
         const output = result.stdout + result.stderr;
         
         // Should handle binary files gracefully
@@ -274,7 +274,7 @@ timeout_seconds: 30
 
         process.env.OPENAI_API_KEY = 'definitely-invalid-key';
 
-        const result = await execAsync(`cd ${testDir} && node ${cliPath} analyze`);
+        const result = await execAsync(`cd ${testDir} && echo 'no' | node ${cliPath} analyze`);
         const output = result.stdout + result.stderr;
         
         // Even with invalid key, should show what it was trying to analyze

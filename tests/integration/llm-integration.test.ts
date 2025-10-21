@@ -49,7 +49,8 @@ timeout_seconds: 30`;
       process.env.OPENAI_API_KEY = 'test-api-key';
 
       try {
-        const { stdout } = await execAsync(`cd ${testDir} && node ${cliPath} analyze`);
+        // Provide 'no' input to avoid hanging on ADR generation prompt
+        const { stdout } = await execAsync(`cd ${testDir} && echo 'no' | node ${cliPath} analyze`);
         expect(stdout).toContain('database-config.ts');
         expect(stdout).toContain('database-connection.ts');
       } finally {

@@ -8,9 +8,10 @@
 
 import { loadConfig, getDefaultConfigPath } from './config';
 import { getChangedFiles, getDiff, DiffOptions, GitError } from './git';
-import { formatPrompt, ANALYSIS_PROMPT_V1 } from './prompts';
-import { analyzeChanges } from './llm';
+import { formatPrompt, ANALYSIS_PROMPT_V1, formatGenerationPrompt, promptForGeneration } from './prompts';
+import { analyzeChanges, generateADRContent } from './llm';
 import { loggerInstance as logger } from './logger';
+import { saveADR } from './adr';
 import * as path from 'path';
 
 /**
@@ -166,10 +167,72 @@ export async function runAnalysis(diffOptions: DiffOptions = { mode: 'all' }): P
         // eslint-disable-next-line no-console
         console.log(`🎯 Confidence: ${(result.confidence * 100).toFixed(0)}%\n`);
       }
-      // eslint-disable-next-line no-console
-      console.log('🎯 Recommendation: Consider creating an ADR to document');
-      // eslint-disable-next-line no-console
-      console.log('   this architectural decision and its implications.\n');
+
+      // Prompt user for ADR generation
+      const shouldGenerate = await promptForGeneration(result.reason);
+
+      if (shouldGenerate) {
+        // eslint-disable-next-line no-console
+        console.log('\n🧠 Generating ADR draft...\n');
+
+        // Format generation prompt
+        const generationPrompt = formatGenerationPrompt({
+          file_paths: changedFiles,
+          diff_content: diffContent,
+        });
+
+        // Call LLM to generate ADR content
+        const generationResponse = await generateADRContent(config, {
+          file_paths: changedFiles,
+          diff_content: diffContent,
+          reason: result.reason,
+          generation_prompt: generationPrompt,
+        });
+
+        if (!generationResponse.result || generationResponse.error) {
+          // eslint-disable-next-line no-console
+          console.error('\n❌ ADR generation failed');
+          // eslint-disable-next-line no-console
+          console.error(`\n${generationResponse.error || 'Unknown error occurred'}\n`);
+          logger.error('ADR generation failed', { error: generationResponse.error });
+        } else {
+          // Save ADR to file
+          const saveResult = saveADR(
+            generationResponse.result.content,
+            generationResponse.result.title
+          );
+
+          if (saveResult.success && saveResult.filePath) {
+            // eslint-disable-next-line no-console
+            console.log('✅ Success! Draft ADR created\n');
+            // eslint-disable-next-line no-console
+            console.log(`📄 File: ${saveResult.filePath}\n`);
+            // eslint-disable-next-line no-console
+            console.log('💡 Next steps:');
+            // eslint-disable-next-line no-console
+            console.log('   1. Review and refine the generated ADR');
+            // eslint-disable-next-line no-console
+            console.log('   2. Commit it alongside your code changes\n');
+            
+            logger.info('ADR generation workflow completed successfully', {
+              filePath: saveResult.filePath,
+              title: generationResponse.result.title,
+            });
+          } else {
+            // eslint-disable-next-line no-console
+            console.error('\n❌ Failed to save ADR');
+            // eslint-disable-next-line no-console
+            console.error(`\n${saveResult.error || 'Unknown error occurred'}\n`);
+            logger.error('Failed to save ADR', { error: saveResult.error });
+          }
+        }
+      } else {
+        // User declined generation
+        // eslint-disable-next-line no-console
+        console.log('\n📋 Skipping ADR generation');
+        // eslint-disable-next-line no-console
+        console.log('🎯 Recommendation: Consider documenting this decision manually.\n');
+      }
     } else {
       // eslint-disable-next-line no-console
       console.log('📊 Result: ℹ️  NOT ARCHITECTURALLY SIGNIFICANT');

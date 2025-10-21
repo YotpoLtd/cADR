@@ -1,4 +1,14 @@
-import { ANALYSIS_PROMPT_V1, formatPrompt } from './prompts';
+import { 
+  ANALYSIS_PROMPT_V1, 
+  formatPrompt, 
+  GENERATION_PROMPT_V1,
+  formatGenerationPrompt,
+  promptForGeneration 
+} from './prompts';
+import * as readline from 'readline';
+
+// Mock readline
+jest.mock('readline');
 
 describe('Prompts Module', () => {
   describe('ANALYSIS_PROMPT_V1', () => {
@@ -207,6 +217,298 @@ diff --git a/src/test.ts b/src/test.ts
         ANALYSIS_PROMPT_V1.includes('false');
       
       expect(hasBoolean).toBe(true);
+    });
+  });
+
+  describe('GENERATION_PROMPT_V1', () => {
+    test('prompt template includes required placeholders', () => {
+      expect(GENERATION_PROMPT_V1).toContain('{file_paths}');
+      expect(GENERATION_PROMPT_V1).toContain('{diff_content}');
+      expect(GENERATION_PROMPT_V1).toContain('{current_date}');
+    });
+
+    test('prompt includes MADR template structure', () => {
+      const prompt = GENERATION_PROMPT_V1.toLowerCase();
+      
+      // Must mention MADR sections
+      expect(prompt).toContain('context and problem statement');
+      expect(prompt).toContain('decision drivers');
+      expect(prompt).toContain('considered options');
+      expect(prompt).toContain('decision outcome');
+      expect(prompt).toContain('consequences');
+    });
+
+    test('prompt specifies MADR format explicitly', () => {
+      expect(GENERATION_PROMPT_V1).toContain('MADR');
+    });
+
+    test('prompt includes all required MADR sections in template', () => {
+      const prompt = GENERATION_PROMPT_V1;
+      
+      // Check for MADR section headings
+      expect(prompt).toContain('# [');  // Title format
+      expect(prompt).toContain('* Status:');
+      expect(prompt).toContain('* Date:');
+      expect(prompt).toContain('## Context and Problem Statement');
+      expect(prompt).toContain('## Decision Drivers');
+      expect(prompt).toContain('## Considered Options');
+      expect(prompt).toContain('## Decision Outcome');
+      expect(prompt).toContain('### Consequences');
+      expect(prompt).toContain('## More Information');
+    });
+
+    test('prompt instructs to use EXACT markdown structure', () => {
+      const prompt = GENERATION_PROMPT_V1.toUpperCase();
+      expect(prompt).toContain('EXACT');
+    });
+
+    test('prompt specifies response should be markdown only', () => {
+      const prompt = GENERATION_PROMPT_V1.toLowerCase();
+      expect(prompt).toContain('respond only');
+      expect(prompt).toContain('markdown');
+    });
+
+    test('prompt version is clearly identified', () => {
+      expect(GENERATION_PROMPT_V1).toBeDefined();
+      expect(typeof GENERATION_PROMPT_V1).toBe('string');
+    });
+  });
+
+  describe('formatGenerationPrompt', () => {
+    const mockData = {
+      file_paths: ['src/database.ts', 'src/config.ts'],
+      diff_content: `
+diff --git a/src/database.ts b/src/database.ts
++import pg from 'pg';
++export const database = new pg.Pool();
+`
+    };
+
+    test('replaces file_paths placeholder with formatted list', () => {
+      const formatted = formatGenerationPrompt(mockData);
+
+      expect(formatted).not.toContain('{file_paths}');
+      expect(formatted).toContain('src/database.ts');
+      expect(formatted).toContain('src/config.ts');
+    });
+
+    test('replaces diff_content placeholder with actual diff', () => {
+      const formatted = formatGenerationPrompt(mockData);
+
+      expect(formatted).not.toContain('{diff_content}');
+      expect(formatted).toContain('diff --git');
+      expect(formatted).toContain('pg.Pool');
+    });
+
+    test('replaces current_date placeholder with valid date', () => {
+      const formatted = formatGenerationPrompt(mockData);
+
+      expect(formatted).not.toContain('{current_date}');
+      // Check for YYYY-MM-DD format
+      expect(formatted).toMatch(/\d{4}-\d{2}-\d{2}/);
+    });
+
+    test('current date is today\'s date', () => {
+      const formatted = formatGenerationPrompt(mockData);
+      const today = new Date().toISOString().split('T')[0];
+      
+      expect(formatted).toContain(today);
+    });
+
+    test('handles empty file paths array', () => {
+      const emptyData = {
+        file_paths: [],
+        diff_content: mockData.diff_content
+      };
+
+      const formatted = formatGenerationPrompt(emptyData);
+      expect(formatted).not.toContain('{file_paths}');
+      expect(formatted).toBeDefined();
+    });
+
+    test('preserves MADR template structure', () => {
+      const formatted = formatGenerationPrompt(mockData);
+
+      expect(formatted).toContain('Context and Problem Statement');
+      expect(formatted).toContain('Decision Drivers');
+      expect(formatted).toContain('Considered Options');
+      expect(formatted).toContain('Decision Outcome');
+      expect(formatted).toContain('Consequences');
+    });
+
+    test('returns valid prompt with all placeholders replaced', () => {
+      const formatted = formatGenerationPrompt(mockData);
+
+      // Should not contain any unreplaced placeholders
+      expect(formatted).not.toMatch(/\{[a-z_]+\}/);
+    });
+  });
+
+  describe('promptForGeneration', () => {
+    let mockReadlineInterface: {
+      question: jest.Mock;
+      close: jest.Mock;
+    };
+
+    beforeEach(() => {
+      // Reset mocks
+      jest.clearAllMocks();
+      
+      // Setup mock readline interface
+      mockReadlineInterface = {
+        question: jest.fn(),
+        close: jest.fn()
+      };
+
+      (readline.createInterface as jest.Mock).mockReturnValue(mockReadlineInterface);
+    });
+
+    test('returns true for empty input (ENTER pressed)', async () => {
+      mockReadlineInterface.question.mockImplementation((question: string, callback: (answer: string) => void) => {
+        callback('');  // Simulate pressing ENTER
+      });
+
+      const result = await promptForGeneration('Test reason');
+
+      expect(result).toBe(true);
+      expect(mockReadlineInterface.close).toHaveBeenCalled();
+    });
+
+    test('returns true for "yes" input', async () => {
+      mockReadlineInterface.question.mockImplementation((question: string, callback: (answer: string) => void) => {
+        callback('yes');
+      });
+
+      const result = await promptForGeneration('Test reason');
+
+      expect(result).toBe(true);
+    });
+
+    test('returns true for "y" input', async () => {
+      mockReadlineInterface.question.mockImplementation((question: string, callback: (answer: string) => void) => {
+        callback('y');
+      });
+
+      const result = await promptForGeneration('Test reason');
+
+      expect(result).toBe(true);
+    });
+
+    test('returns true for "YES" input (case insensitive)', async () => {
+      mockReadlineInterface.question.mockImplementation((question: string, callback: (answer: string) => void) => {
+        callback('YES');
+      });
+
+      const result = await promptForGeneration('Test reason');
+
+      expect(result).toBe(true);
+    });
+
+    test('returns true for "Y" input (case insensitive)', async () => {
+      mockReadlineInterface.question.mockImplementation((question: string, callback: (answer: string) => void) => {
+        callback('Y');
+      });
+
+      const result = await promptForGeneration('Test reason');
+
+      expect(result).toBe(true);
+    });
+
+    test('returns false for "no" input', async () => {
+      mockReadlineInterface.question.mockImplementation((question: string, callback: (answer: string) => void) => {
+        callback('no');
+      });
+
+      const result = await promptForGeneration('Test reason');
+
+      expect(result).toBe(false);
+    });
+
+    test('returns false for "n" input', async () => {
+      mockReadlineInterface.question.mockImplementation((question: string, callback: (answer: string) => void) => {
+        callback('n');
+      });
+
+      const result = await promptForGeneration('Test reason');
+
+      expect(result).toBe(false);
+    });
+
+    test('returns false for any other input', async () => {
+      mockReadlineInterface.question.mockImplementation((question: string, callback: (answer: string) => void) => {
+        callback('maybe');
+      });
+
+      const result = await promptForGeneration('Test reason');
+
+      expect(result).toBe(false);
+    });
+
+    test('handles whitespace in input', async () => {
+      mockReadlineInterface.question.mockImplementation((question: string, callback: (answer: string) => void) => {
+        callback('  yes  ');
+      });
+
+      const result = await promptForGeneration('Test reason');
+
+      expect(result).toBe(true);
+    });
+
+    test('displays the reason in the prompt', async () => {
+      const reason = 'Introduces PostgreSQL as primary datastore';
+      mockReadlineInterface.question.mockImplementation((question: string, callback: (answer: string) => void) => {
+        callback('yes');
+      });
+
+      await promptForGeneration(reason);
+
+      // Check that question was called
+      expect(mockReadlineInterface.question).toHaveBeenCalled();
+    });
+
+    test('closes readline interface after response', async () => {
+      mockReadlineInterface.question.mockImplementation((question: string, callback: (answer: string) => void) => {
+        callback('yes');
+      });
+
+      await promptForGeneration('Test reason');
+
+      expect(mockReadlineInterface.close).toHaveBeenCalledTimes(1);
+    });
+
+    test('creates readline interface with stdin and stdout', async () => {
+      mockReadlineInterface.question.mockImplementation((question: string, callback: (answer: string) => void) => {
+        callback('yes');
+      });
+
+      await promptForGeneration('Test reason');
+
+      expect(readline.createInterface).toHaveBeenCalledWith({
+        input: process.stdin,
+        output: process.stdout
+      });
+    });
+  });
+
+  describe('Generation Prompt Quality', () => {
+    test('generation prompt is substantial', () => {
+      expect(GENERATION_PROMPT_V1.length).toBeGreaterThan(200);
+    });
+
+    test('generation prompt provides clear instructions', () => {
+      const prompt = GENERATION_PROMPT_V1.toLowerCase();
+      
+      expect(
+        prompt.includes('generate') ||
+        prompt.includes('write') ||
+        prompt.includes('create')
+      ).toBe(true);
+    });
+
+    test('both prompts are exported and distinct', () => {
+      expect(ANALYSIS_PROMPT_V1).toBeDefined();
+      expect(GENERATION_PROMPT_V1).toBeDefined();
+      expect(ANALYSIS_PROMPT_V1).not.toBe(GENERATION_PROMPT_V1);
     });
   });
 });

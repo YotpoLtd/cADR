@@ -9,11 +9,13 @@ Automatically capture and document architectural decisions as you code.
 ## Features
 
 - 🤖 **LLM-Powered Analysis** - OpenAI and Gemini integration to detect architecturally significant changes
-- 📝 **Smart Detection** - Analyzes git diffs to identify architectural decisions
+- 📝 **Automated ADR Generation** - Generates Markdown ADRs following the MADR template format
 - ⚡ **Git Integration** - Works with your existing git workflow
 - 🔧 **Easy Setup** - Interactive configuration with `cadr init`
 - 🛡️ **Fail-Open** - Never blocks your workflow, always exits gracefully
 - 📊 **Structured Logging** - Comprehensive observability with pino
+- 🎯 **Smart Detection** - Analyzes git diffs to identify architectural decisions
+- 📁 **Auto-Organization** - Sequential numbering and automatic directory creation
 
 ## Installation
 
@@ -128,8 +130,18 @@ cadr --analyze
    affecting user session management and security architecture. This 
    represents a fundamental change to how users authenticate.
 
-🎯 Recommendation: Consider creating an ADR to document
-   this architectural decision and its implications.
+📝 Would you like to generate an ADR for this decision?
+   Press ENTER or type 'yes' to generate, 'no' to skip: 
+
+🤖 Generating ADR content...
+
+✅ Success! Draft ADR created
+
+📄 File: docs/adr/0001-jwt-authentication-system.md
+
+💡 Next steps:
+   1. Review and refine the generated ADR
+   2. Commit it alongside your code changes
 ```
 
 **Example output for non-significant changes:**
@@ -155,10 +167,71 @@ cadr --analyze
 
 ### What's Next?
 
+- **Review generated ADRs**: Edit and refine the automatically generated ADRs in `docs/adr/`
+- **Commit ADRs with code**: Include the ADR file in your commit alongside the code changes
 - **Continue your workflow**: cADR never blocks your commits - it only provides insights
-- **Review the analysis**: Consider the LLM's reasoning for your architectural decisions
-- **Document significant changes**: When flagged as significant, create an ADR documenting the decision
 - **Customize configuration**: Edit `cadr.yaml` to adjust the model, timeout, or ignore patterns
+
+### ADR Generation
+
+When cADR detects an architecturally significant change, it offers to automatically generate an ADR:
+
+1. **User Confirmation**: You'll be prompted to confirm ADR generation (press ENTER or type 'yes')
+2. **LLM Generation**: The same LLM model analyzes your changes and generates comprehensive ADR content
+3. **MADR Format**: Generated ADRs follow the [MADR (Markdown Architectural Decision Records)](https://adr.github.io/madr/) template
+4. **Sequential Numbering**: ADRs are automatically numbered (0001, 0002, etc.)
+5. **Auto-Organization**: Creates `docs/adr/` directory if it doesn't exist
+
+**Generated ADR Structure:**
+
+- **Title**: Extracted from the architectural decision
+- **Status**: Marked as "accepted"
+- **Date**: Current date
+- **Context and Problem Statement**: Why this decision was needed
+- **Decision Drivers**: Key factors influencing the decision
+- **Considered Options**: Alternative approaches that were evaluated
+- **Decision Outcome**: The chosen approach and rationale
+- **Consequences**: Positive and negative impacts
+
+**Example Generated ADR:**
+
+```markdown
+# Use JWT for Authentication
+
+* Status: accepted
+* Date: 2025-10-21
+
+## Context and Problem Statement
+
+We need a secure and scalable authentication mechanism for our API...
+
+## Decision Drivers
+
+* Stateless authentication requirements
+* Mobile app compatibility
+* Scalability concerns
+
+## Considered Options
+
+* Session-based authentication
+* JWT tokens
+* OAuth 2.0
+
+## Decision Outcome
+
+Chosen option: "JWT tokens", because it provides stateless authentication...
+
+### Positive Consequences
+
+* Scalable across multiple servers
+* Works well with mobile apps
+* Industry standard
+
+### Negative Consequences
+
+* Token revocation complexity
+* Larger request payload
+```
 
 ## Usage
 
@@ -170,7 +243,7 @@ cadr init
 
 Creates a `cadr.yaml` file with your LLM configuration.
 
-### Analyze Staged Changes
+### Analyze Changes and Generate ADRs
 
 ```bash
 # Stage your changes
@@ -178,9 +251,26 @@ git add src/auth.ts src/user.ts
 
 # Run analysis
 cadr --analyze
+
+# If architecturally significant, you'll be prompted to generate an ADR
+# Press ENTER or type 'yes' to generate
+# The ADR will be created in docs/adr/NNNN-title.md
 ```
 
-The LLM analyzes your changes and determines if they are architecturally significant.
+The LLM analyzes your changes, determines if they are architecturally significant, and offers to generate an ADR document automatically.
+
+**Analyzing Different Change Types:**
+
+```bash
+# Analyze staged changes only
+cadr --analyze --staged
+
+# Analyze all uncommitted changes (default)
+cadr --analyze
+
+# Analyze changes between commits (CI/CD)
+cadr --analyze --base origin/main --head HEAD
+```
 
 ## Configuration
 
@@ -211,7 +301,7 @@ ignore_patterns:
 ### Configuration Options
 
 - **`provider`**: LLM provider (`openai` or `gemini`)
-- **`analysis_model`**: Model to use
+- **`analysis_model`**: Model to use for both analysis and ADR generation
   - `gpt-4`: 8k context window (default)
   - `gpt-4-turbo-preview`: 128k context window (recommended for large diffs)
   - `gpt-4-1106-preview`: 128k context window
@@ -219,6 +309,8 @@ ignore_patterns:
 - **`api_key_env`**: Environment variable containing your API key
 - **`timeout_seconds`**: Request timeout (1-60 seconds)
 - **`ignore_patterns`**: Files to exclude from analysis (glob patterns)
+
+**Note:** The same model is used for both analyzing architectural significance and generating ADR content to ensure consistency.
 
 ## Development
 
@@ -282,6 +374,7 @@ Coverage reports are automatically generated when running `npm test -- --coverag
 Coverage includes **both unit and integration tests** - integration tests often provide the majority of meaningful coverage since they test real code paths.
 
 **Viewing Coverage by Test Type:**
+
 ```bash
 # See what coverage integration tests provide
 npm test -- --coverage --testPathPattern="integration"

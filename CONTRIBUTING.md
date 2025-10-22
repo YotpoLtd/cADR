@@ -2,30 +2,54 @@
 
 Thank you for your interest in contributing to cADR! This document provides guidelines for contributing to the project.
 
-## Development Setup
+## 🚀 Quick Start for Contributors
 
-### Prerequisites
+New to the project? Here's where to start:
 
-- Node.js 20+
-- Yarn 1.22+ (package manager)
-- Git 2.x+ (for Git integration features)
+1. **Read the [Development Setup Guide](./DEVELOPMENT.md)** - Set up your local environment
+2. **Check the [Testing Guide](./TESTING.md)** - Learn how to run and write tests
+3. **Review existing issues** - Find something to work on
+4. **Join discussions** - Ask questions, share ideas
 
-### Setup
+## 📐 Project Architecture
 
-```bash
-# Clone the repository
-git clone https://github.com/YotpoLtd/cADR.git
-cd cADR
+### High-Level Overview
 
-# Install dependencies
-yarn install
+cADR is a TypeScript CLI tool that:
 
-# Build packages
-yarn build
+1. **Integrates with Git** - Reads staged/uncommitted changes or commit diffs
+2. **Analyzes with LLMs** - Uses OpenAI or Gemini to detect architectural significance
+3. **Generates ADRs** - Creates MADR-formatted documentation automatically
+4. **Fails gracefully** - Never blocks user workflows, even on errors
 
-# Run tests
-yarn test
-```
+### Key Components
+
+- `commands/` - CLI command implementations
+- `providers/` - LLM provider implementations (OpenAI, Gemini)
+- `adr.ts` - ADR generation logic
+- `analysis.ts` - Architectural significance detection
+- `config.ts` - Configuration management
+- `git.ts` - Git operations wrapper
+- `llm.ts` - LLM abstraction layer
+- `logger.ts` - Structured logging
+- `index.ts` - CLI entry point
+
+### Architecture Principles
+
+- **Fail-Open**: Errors log warnings but never block the user
+- **Provider-Agnostic**: LLM providers are abstracted behind a common interface
+- **Git-Native**: Works with standard Git commands and workflows
+- **Structured Logging**: All operations are logged with context for debugging
+- **Type-Safe**: Full TypeScript with strict mode enabled
+
+## 🛠️ Development Setup
+
+See the comprehensive [Development Guide](./DEVELOPMENT.md) for:
+
+- Prerequisites and installation
+- Project structure details
+- Building and debugging
+- IDE setup recommendations
 
 ## Commit Convention
 
@@ -42,33 +66,24 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/) f
 - `test:` - Test changes
 - `chore:` - Build/tooling changes
 
-### Examples
-
-```bash
-feat: add support for TypeScript files
-fix: resolve git integration issue
-docs: update installation instructions
-BREAKING CHANGE: remove deprecated API endpoint
-```
-
 ## Release Process
 
 Releases are **automatically triggered** when changes are merged to the `master` branch:
 
 1. **Conventional commits** are analyzed to determine version bump
 2. **CHANGELOG.md** is automatically updated
-3. **Git tags** are created (e.g., `v1.0.0`)
+3. **Git tags** are created
 4. **GitHub release** is published with release notes
 5. **npm package** is published
 
 ## Pull Request Process
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+2. Create a feature branch
 3. Make your changes following the commit convention
-4. Run tests (`yarn test`)
-5. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
+4. Run tests
+5. Commit your changes
+6. Push to the branch
 7. Open a Pull Request
 
 ## Code Style
@@ -78,24 +93,42 @@ Releases are **automatically triggered** when changes are merged to the `master`
 - Add tests for new functionality
 - Update documentation as needed
 
-## Testing
+## 🧪 Testing
 
-Run the test suite:
+Testing is a critical part of cADR. We use both unit and integration tests to ensure reliability.
 
-```bash
-# Run all tests
-yarn test
+See the comprehensive [Testing Guide](./TESTING.md) for details on running and writing tests.
 
-# Run tests with coverage
-yarn test:coverage
+## 🎯 Finding Something to Work On
 
-# Run linting
-yarn lint
+### Good First Issues
 
-# Format code
-yarn format
-```
+Look for issues labeled `good first issue` - these are great entry points for new contributors.
 
-## Questions?
+### Areas That Need Help
 
-If you have any questions, please open an issue or start a discussion in the repository.
+- **LLM Providers**: Add support for new providers (Anthropic, etc.)
+- **Documentation**: Improve guides, add examples, fix typos
+- **Testing**: Increase test coverage, add integration tests
+- **Features**: Check the issue tracker for feature requests
+
+### Before Starting Work
+
+1. **Check existing issues/PRs** - Someone might already be working on it
+2. **Comment on the issue** - Let others know you're working on it
+3. **Ask questions** - Clarify requirements before diving in
+
+## 📚 Additional Resources
+
+- **[Development Guide](./DEVELOPMENT.md)** - Detailed development setup and workflows
+- **[Testing Guide](./TESTING.md)** - Comprehensive testing documentation
+- **[Usage Guide](./docs/USAGE.md)** - Understanding how cADR works
+- **[Specifications](./specs/)** - Feature specs and contracts
+
+## ❓ Questions?
+
+If you have any questions:
+
+- 💬 [Start a discussion](https://github.com/YotpoLtd/cADR/discussions)
+- 🐛 [Open an issue](https://github.com/YotpoLtd/cADR/issues)
+- 📖 Read the [documentation](./docs/)

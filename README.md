@@ -17,7 +17,28 @@ Stop losing track of important architectural decisions. cADR analyzes your code 
 
 ## 🚀 Quick Start
 
-See the **[Quick Start Guide](./docs/QUICK_START.md)** for detailed setup instructions.
+Get cADR running in under 2 minutes:
+
+```bash
+# Install
+npm install -g @yotpoltd/cadr-cli --registry=https://npm.pkg.github.com
+
+# Set your API key (choose one)
+export OPENAI_API_KEY="sk-your-api-key-here"
+# OR
+export GEMINI_API_KEY="your-api-key-here"
+
+# Navigate to your Git repository
+cd /path/to/your/repo
+
+# Initialize configuration
+cadr init
+
+# Make some changes, then analyze
+cadr analyze
+```
+
+**[→ Full Quick Start Guide with Examples](./docs/QUICK_START.md)**
 
 ## 🎯 Key Features
 
@@ -46,15 +67,42 @@ See the **[Quick Start Guide](./docs/QUICK_START.md)** for detailed setup instru
 
 ## 📦 Installation
 
-See [GITHUB_PACKAGES.md](./docs/GITHUB_PACKAGES.md) for authentication and installation details.
+### Quick Install
+
+```bash
+npm install -g @yotpoltd/cadr-cli --registry=https://npm.pkg.github.com
+```
+
+### Verify Installation
+
+```bash
+cadr --version
+# Output: cADR version 0.0.1 (core: 0.0.1)
+```
+
+For authentication and detailed installation options, see [GITHUB_PACKAGES.md](./docs/GITHUB_PACKAGES.md).
 
 ## 🔧 Configuration
 
-The tool is configured via `cadr.yaml` in your project root. See the [Usage Guide](./docs/USAGE.md#configuration) for configuration options.
+cADR is configured via `cadr.yaml` in your project root. Run `cadr init` to create it interactively, or create it manually:
+
+```yaml
+provider: openai
+analysis_model: gpt-4
+api_key_env: OPENAI_API_KEY
+timeout_seconds: 15
+ignore_patterns:
+  - node_modules/**
+  - "*.test.ts"
+  - dist/**
+```
 
 **Supported Providers:**
-- OpenAI: `gpt-4`, `gpt-4-turbo-preview`, `gpt-4-1106-preview`
-- Gemini: `gemini-1.5-pro`
+
+- **OpenAI**: `gpt-4`, `gpt-4-turbo-preview`, `gpt-4-1106-preview`
+- **Gemini**: `gemini-1.5-pro`, `gemini-1.5-flash`
+
+See the [Usage Guide](./docs/USAGE.md#configuration) for all configuration options.
 
 ## 🏗️ What Gets Generated?
 

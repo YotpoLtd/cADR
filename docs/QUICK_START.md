@@ -10,9 +10,70 @@ Before you begin, ensure you have:
 - ✅ **Git 2.x+** installed ([Download](https://git-scm.com/))
 - ✅ **API Key** from [OpenAI](https://platform.openai.com/api-keys) or [Google AI Studio](https://aistudio.google.com/app/apikey)
 
+## 🚀 Quick Copy-Paste Setup
+
+Want to get started in under 2 minutes? Run these commands:
+
+```bash
+# 1. Install cADR
+npm install -g @yotpoltd/cadr-cli --registry=https://npm.pkg.github.com
+
+# 2. Set your API key (choose one)
+export OPENAI_API_KEY="sk-your-api-key-here"
+# OR
+export GEMINI_API_KEY="your-api-key-here"
+
+# 3. Navigate to your Git repository
+cd /path/to/your/repo
+
+# 4. Initialize configuration (follow the prompts)
+cadr init
+
+# 5. Make some changes to your code, then run analysis
+cadr analyze
+```
+
+That's it! Continue reading for detailed explanations and examples.
+
+---
+
 ## Installation
 
-See [GITHUB_PACKAGES.md](./GITHUB_PACKAGES.md) for complete installation and authentication instructions.
+cADR is published to GitHub Packages. Choose one of the following installation methods:
+
+### Option 1: Direct Installation (Recommended)
+
+Install directly with the registry flag:
+
+```bash
+npm install -g @yotpoltd/cadr-cli --registry=https://npm.pkg.github.com
+```
+
+### Option 2: Configure npm for @yotpoltd scope
+
+Set up your npm configuration once, then install normally:
+
+```bash
+# Configure npm to use GitHub Packages for @yotpoltd scope
+echo "@yotpoltd:registry=https://npm.pkg.github.com" >> ~/.npmrc
+
+# Install the CLI globally
+npm install -g @yotpoltd/cadr-cli
+```
+
+### Verify Installation
+
+Check that cadr is installed correctly:
+
+```bash
+cadr --version
+```
+
+**Expected output:**
+
+```text
+cADR version 0.0.1 (core: 0.0.1)
+```
 
 ## Setup Your API Key
 
@@ -338,6 +399,125 @@ cadr --verbose analyze
 ```
 
 This shows additional debug information during the analysis process.
+
+## Common Issues
+
+### Installation: Package not found
+
+If you get a 404 error during installation:
+
+```bash
+# Clear npm cache
+npm cache clean --force
+
+# Try installing with explicit registry
+npm install -g @yotpoltd/cadr-cli --registry=https://npm.pkg.github.com
+```
+
+### Installation: Authentication required
+
+If you get authentication errors and the package is private:
+
+```bash
+# Create a GitHub Personal Access Token with 'read:packages' permission
+# Then configure npm:
+npm config set //npm.pkg.github.com/:_authToken YOUR_GITHUB_TOKEN
+
+# Or add to ~/.npmrc:
+echo "//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN" >> ~/.npmrc
+```
+
+### Command not found: cadr
+
+If `cadr` command is not found after installation:
+
+```bash
+# Check if cadr is installed
+npm list -g @yotpoltd/cadr-cli
+
+# Find npm global bin directory
+npm bin -g
+
+# Add to your PATH (add to ~/.bashrc or ~/.zshrc for persistence)
+export PATH="$PATH:$(npm bin -g)"
+
+# Verify it works
+cadr --version
+```
+
+### Invalid API Key
+
+If you see API key errors:
+
+```bash
+# Check if the environment variable is set
+echo $OPENAI_API_KEY  # or $GEMINI_API_KEY
+
+# Set it if missing
+export OPENAI_API_KEY="sk-your-api-key-here"
+
+# Make it permanent by adding to your shell profile
+echo 'export OPENAI_API_KEY="sk-your-api-key-here"' >> ~/.zshrc  # or ~/.bashrc
+
+# Reload your shell
+source ~/.zshrc  # or source ~/.bashrc
+```
+
+### Configuration file not found
+
+If you see "Configuration file not found or invalid":
+
+```bash
+# Run init to create the configuration
+cadr init
+
+# Verify the file was created
+ls -la cadr.yaml
+```
+
+### No changes to analyze
+
+If you see "No changes to analyze":
+
+**For staged mode:**
+
+```bash
+# Stage some files first
+git add src/
+
+# Then analyze
+cadr analyze --staged
+```
+
+**For default mode:**
+
+```bash
+# Make some changes to your files
+# Then run analyze (it will pick up uncommitted changes)
+cadr analyze
+```
+
+**For CI/CD mode:**
+
+```bash
+# Make sure you're comparing the right branches
+git log --oneline origin/main..HEAD
+
+# Run analysis
+cadr analyze --base origin/main
+```
+
+### Analysis timeout
+
+If analysis times out with large changesets:
+
+```yaml
+# Edit cadr.yaml and increase timeout
+timeout_seconds: 30  # increase from 15 to 30 or higher
+
+# Or use a model with larger context window
+analysis_model: gpt-4-turbo-preview  # or gemini-1.5-pro
+```
 
 ## What's Next?
 

@@ -28,7 +28,8 @@
     "node": ">=20.0.0"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
   },
   "dependencies": {
     "pino": "^8.17.2",

@@ -21,7 +21,7 @@ Get cADR running in under 2 minutes:
 
 ```bash
 # Install
-npm install -g @yotpoltd/cadr-cli --registry=https://npm.pkg.github.com
+npm install -g @yotpoltd/cadr-cli
 
 # Set your API key (choose one)
 export OPENAI_API_KEY="sk-your-api-key-here"
@@ -70,7 +70,7 @@ cadr analyze
 ### Quick Install
 
 ```bash
-npm install -g @yotpoltd/cadr-cli --registry=https://npm.pkg.github.com
+npm install -g @yotpoltd/cadr-cli
 ```
 
 ### Verify Installation
@@ -80,7 +80,7 @@ cadr --version
 # Output: cADR version 0.0.1 (core: 0.0.1)
 ```
 
-For authentication and detailed installation options, see [GITHUB_PACKAGES.md](./docs/GITHUB_PACKAGES.md).
+For more installation options and configuration, see the [Usage Guide](./docs/USAGE.md).
 
 ## 🔧 Configuration
 

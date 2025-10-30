@@ -8,8 +8,7 @@
     [
       "@semantic-release/npm",
       {
-        "pkgRoot": "./packages/cli",
-        "registry": "https://npm.pkg.github.com"
+        "pkgRoot": "./packages/cli"
       }
     ],
     [

@@ -21,7 +21,7 @@ Get cADR running in under 2 minutes:
 
 ```bash
 # Install
-npm install -g @yotpoltd/cadr-cli
+npm install -g cadr-cli
 
 # Set your API key (choose one)
 export OPENAI_API_KEY="sk-your-api-key-here"
@@ -70,7 +70,7 @@ cadr analyze
 ### Quick Install
 
 ```bash
-npm install -g @yotpoltd/cadr-cli
+npm install -g cadr-cli
 ```
 
 ### Verify Installation

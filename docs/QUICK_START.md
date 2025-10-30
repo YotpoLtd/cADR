@@ -16,7 +16,7 @@ Want to get started in under 2 minutes? Run these commands:
 
 ```bash
 # 1. Install cADR
-npm install -g @yotpoltd/cadr-cli --registry=https://npm.pkg.github.com
+npm install -g cadr-cli
 
 # 2. Set your API key (choose one)
 export OPENAI_API_KEY="sk-your-api-key-here"
@@ -39,26 +39,10 @@ That's it! Continue reading for detailed explanations and examples.
 
 ## Installation
 
-cADR is published to GitHub Packages. Choose one of the following installation methods:
-
-### Option 1: Direct Installation (Recommended)
-
-Install directly with the registry flag:
+cADR is published to the public npm registry. Install with a single command:
 
 ```bash
-npm install -g @yotpoltd/cadr-cli --registry=https://npm.pkg.github.com
-```
-
-### Option 2: Configure npm for @yotpoltd scope
-
-Set up your npm configuration once, then install normally:
-
-```bash
-# Configure npm to use GitHub Packages for @yotpoltd scope
-echo "@yotpoltd:registry=https://npm.pkg.github.com" >> ~/.npmrc
-
-# Install the CLI globally
-npm install -g @yotpoltd/cadr-cli
+npm install -g cadr-cli
 ```
 
 ### Verify Installation
@@ -410,21 +394,8 @@ If you get a 404 error during installation:
 # Clear npm cache
 npm cache clean --force
 
-# Try installing with explicit registry
-npm install -g @yotpoltd/cadr-cli --registry=https://npm.pkg.github.com
-```
-
-### Installation: Authentication required
-
-If you get authentication errors and the package is private:
-
-```bash
-# Create a GitHub Personal Access Token with 'read:packages' permission
-# Then configure npm:
-npm config set //npm.pkg.github.com/:_authToken YOUR_GITHUB_TOKEN
-
-# Or add to ~/.npmrc:
-echo "//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN" >> ~/.npmrc
+# Try installing again
+npm install -g cadr-cli
 ```
 
 ### Command not found: cadr
@@ -433,7 +404,7 @@ If `cadr` command is not found after installation:
 
 ```bash
 # Check if cadr is installed
-npm list -g @yotpoltd/cadr-cli
+npm list -g cadr-cli
 
 # Find npm global bin directory
 npm bin -g

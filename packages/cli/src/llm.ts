@@ -194,8 +194,7 @@ export async function analyzeChanges(
       const tokenMatch = errorObj.message.match(/(\d+)\s+tokens/g);
       errorMessage = 'Diff too large for model context window. Try:\n' +
         '  • Stage fewer files at once\n' +
-        '  • Use gpt-4-turbo (128k context) in cadr.yaml:\n' +
-        '    analysis_model: gpt-4-turbo-preview\n' +
+        '  • Use a model with larger context window in cadr.yaml\n' +
         '  • Add ignore patterns to filter large files';
       logger.warn('LLM context length exceeded', { 
         error: errorObj,

@@ -99,10 +99,10 @@ ignore_patterns:
 
 **Supported Providers:**
 
-- **OpenAI**: `gpt-4`, `gpt-4-turbo-preview`, `gpt-4-1106-preview`
-- **Gemini**: `gemini-1.5-pro`, `gemini-1.5-flash`
+- **OpenAI**: All OpenAI chat models
+- **Gemini**: All Google Gemini models
 
-See the [Usage Guide](./docs/USAGE.md#configuration) for all configuration options.
+Specify any model name supported by your chosen provider. See the [Usage Guide](./docs/USAGE.md#configuration) for all configuration options.
 
 ## 🏗️ What Gets Generated?
 

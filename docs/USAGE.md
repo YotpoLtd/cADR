@@ -83,11 +83,12 @@ LLM provider to use for analysis and ADR generation.
 
 #### `analysis_model` (required)
 
-Model to use for both architectural analysis and ADR generation. Such as:
+Model to use for both architectural analysis and ADR generation. 
 
-- `gpt-4` - 8K context window (default)
-- `gpt-4-turbo-preview` - 128K context window (recommended for large diffs)
-- `gemini-1.5-pro` - 1M+ context window
+You can specify any model name supported by your chosen provider:
+
+- **OpenAI**: Any chat completion model (e.g., `gpt-4`, `gpt-4-turbo`, `gpt-3.5-turbo`)
+- **Gemini**: Any generative model (e.g., `gemini-1.5-pro`, `gemini-1.5-flash`, `gemini-pro`)
 
 > 💡 **Tip**: Use models with larger context windows if analyzing large changesets.
 

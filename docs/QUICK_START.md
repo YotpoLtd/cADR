@@ -486,8 +486,7 @@ If analysis times out with large changesets:
 # Edit cadr.yaml and increase timeout
 timeout_seconds: 30  # increase from 15 to 30 or higher
 
-# Or use a model with larger context window
-analysis_model: gpt-4-turbo-preview  # or gemini-1.5-pro
+# Or use a model with larger context window from your provider
 ```
 
 ## What's Next?

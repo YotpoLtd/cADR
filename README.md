@@ -45,10 +45,6 @@ cadr analyze
 - 🤖 **LLM-Powered Analysis** - OpenAI and Gemini integration to detect architecturally significant changes
 - 📝 **Automated ADR Generation** - Generates comprehensive Markdown ADRs following the MADR template format
 - ⚡ **Git Integration** - Analyzes staged changes, uncommitted changes, or commit ranges
-- 🛡️ **Fail-Open Design** - Never blocks your workflow, always exits gracefully
-- 📊 **Structured Logging** - Comprehensive observability
-- 🎯 **Smart Detection** - Configurable ignore patterns to focus on what matters
-- 📁 **Auto-Organization** - Sequential numbering and automatic directory creation
 
 ## 📚 Documentation
 

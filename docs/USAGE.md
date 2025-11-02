@@ -121,74 +121,25 @@ Glob patterns for files to exclude from analysis.
 
 ## Advanced Usage
 
-### Dry Run (No ADR Generation)
-
-Analyze changes and see results without generating an ADR by declining when prompted.
-
-### Analyzing Specific File Types
-
-Use `ignore_patterns` to focus on specific files by excluding everything else.
-
-### Multiple Projects
-
-Each project maintains its own configuration and ADR directory.
-
-### Custom ADR Directory
-
-By default, ADRs are created in `docs/adr/`. To use a different location, move or symlink the directory as needed.
-
-## CI/CD Integration
-
-cADR can be integrated into continuous integration pipelines to check for architectural changes in pull requests.
-
-### GitHub Actions
-
-See the Usage Guide for example workflow configuration.
-
-### GitLab CI
-
-See the Usage Guide for example pipeline configuration.
-
-### Pre-commit Hook
-
-cADR can be added as a pre-commit hook for local validation.
+- Use `ignore_patterns` in your config to focus analysis on certain file types or exclude irrelevant files.
+- Each project can have its own configuration and ADR directory (default: `docs/adr/`).
+- You can integrate cADR in CI/CD or as a pre-commit hook to check for architectural changes.
 
 ## Troubleshooting
 
-### Analysis Times Out
-
-Increase timeout in configuration.
-
-### "Too many tokens" Error
-
-Use a model with larger context window or add more files to ignore patterns.
-
-### API Key Not Found
-
-Verify environment variable is set.
-
-### No Configuration File
-
-Run init to create configuration file.
+- **Timeouts**: Increase `timeout_seconds` in your config.
+- **API Key Not Found**: Check your environment variable setup.
+- **"Too many tokens" Error**: Use a model with a larger context window or add more ignore patterns.
 
 ## Best Practices
 
-1. **Run frequently**: Analyze changes regularly to catch architectural decisions early
-2. **Review generated ADRs**: Always review and refine AI-generated content
-3. **Commit ADRs with code**: Keep ADRs in sync with the code changes they document
-4. **Use ignore patterns**: Focus analysis on relevant files
-5. **Adjust timeout**: Increase for large changesets or slower connections
-6. **Choose appropriate models**: Use larger context windows for big diffs
-
-## Next Steps
-
-- Learn about [ADR Generation](./ADR_GENERATION.md)
-- See [MADR Template Format](./MADR_TEMPLATE.md)
-- Read [Contributing Guide](../CONTRIBUTING.md)
+- Run cADR often to track important decisions promptly.
+- Review and refine generated ADRs.
+- Keep ADRs committed with related code changes.
+- Use ignore patterns to reduce noise.
 
 ## Need Help?
 
-- 🐛 [Report Issues](https://github.com/YotpoLtd/cADR/issues)
-- 💬 [Discussions](https://github.com/YotpoLtd/cADR/discussions)
-- 📖 [Main README](../README.md)
-
+- [Open an Issue](https://github.com/YotpoLtd/cADR/issues)
+- [Discussions](https://github.com/YotpoLtd/cADR/discussions)
+- [Main README](../README.md)

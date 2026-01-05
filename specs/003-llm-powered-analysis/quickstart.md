@@ -16,11 +16,11 @@
 
 ```bash
 # Using GitHub Packages (recommended)
-npm install -g @yotpoltd/cadr-cli --registry=https://npm.pkg.github.com
+npm install -g cadr-cli --registry=https://npm.pkg.github.com
 
 # Or configure npm to use GitHub Packages for @yotpoltd scope
 echo "@yotpoltd:registry=https://npm.pkg.github.com" >> ~/.npmrc
-npm install -g @yotpoltd/cadr-cli
+npm install -g cadr-cli
 ```
 
 ### 2. Set up OpenAI API Key
@@ -214,7 +214,7 @@ jobs:
         with:
           node-version: '20'
       - name: Install cADR
-        run: npm install -g @yotpoltd/cadr-cli
+        run: npm install -g cadr-cli
       - name: Analyze changes
         run: cadr --analyze
         env:
@@ -226,7 +226,7 @@ jobs:
 ### Common Issues
 
 1. **"Command not found: cadr"**
-   - Ensure cADR is installed globally: `npm list -g @yotpoltd/cadr-cli`
+   - Ensure cADR is installed globally: `npm list -g cadr-cli`
    - Check PATH includes npm global bin directory
 
 2. **"Configuration file not found"**

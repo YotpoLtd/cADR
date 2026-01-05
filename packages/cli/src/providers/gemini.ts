@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { LLMProvider, ProviderCallOptions } from './types';
+import { LLMProvider, ProviderCallOptions, DEFAULT_MAX_OUTPUT_TOKENS } from './types';
 
 export const geminiProvider: LLMProvider = {
   name: 'gemini',
@@ -19,7 +19,7 @@ export const geminiProvider: LLMProvider = {
       ],
       generationConfig: {
         temperature: 0.3,
-        maxOutputTokens: 500,
+        maxOutputTokens: DEFAULT_MAX_OUTPUT_TOKENS,
       },
     });
 

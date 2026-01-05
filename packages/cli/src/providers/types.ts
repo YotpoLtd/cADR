@@ -1,5 +1,7 @@
 import { AnalysisConfig } from '../config';
 
+export const DEFAULT_MAX_OUTPUT_TOKENS = 4096;
+
 export interface ProviderCallOptions {
   apiKey: string;
   model: string;

@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { LLMProvider, ProviderCallOptions } from './types';
+import { LLMProvider, ProviderCallOptions, DEFAULT_MAX_OUTPUT_TOKENS } from './types';
 
 export const openAIProvider: LLMProvider = {
   name: 'openai',
@@ -13,7 +13,7 @@ export const openAIProvider: LLMProvider = {
           { role: 'user', content: prompt },
         ],
         temperature: 0.3,
-        max_tokens: 500,
+        max_tokens: DEFAULT_MAX_OUTPUT_TOKENS,
       },
       { timeout: options.timeoutMs }
     );

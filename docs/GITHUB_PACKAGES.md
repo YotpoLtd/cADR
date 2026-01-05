@@ -24,7 +24,7 @@ The project is already configured to publish to GitHub Packages:
 #### Option 1: One-time installation with registry flag
 
 ```bash
-npm install -g @yotpoltd/cadr-cli --registry=https://npm.pkg.github.com
+npm install -g cadr-cli --registry=https://npm.pkg.github.com
 ```
 
 #### Option 2: Configure npm globally for @yotpoltd scope
@@ -34,7 +34,7 @@ npm install -g @yotpoltd/cadr-cli --registry=https://npm.pkg.github.com
 echo "@yotpoltd:registry=https://npm.pkg.github.com" >> ~/.npmrc
 
 # Then install normally
-npm install -g @yotpoltd/cadr-cli
+npm install -g cadr-cli
 ```
 
 #### Option 3: Project-specific configuration
@@ -70,9 +70,9 @@ Or add to your `.npmrc`:
 
 ## Package Scope
 
-The package is published under the `@yotpoltd` scope:
+The package is published as an unscoped package:
 
-- Package name: `@yotpoltd/cadr-cli`
+- Package name: `cadr-cli`
 - Registry: `https://npm.pkg.github.com`
 - Organization: `YotpoLtd`
 

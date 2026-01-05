@@ -13,7 +13,7 @@ export const openAIProvider: LLMProvider = {
           { role: 'user', content: prompt },
         ],
         temperature: 0.3,
-        max_tokens: 500,
+        max_tokens: 4096,
       },
       { timeout: options.timeoutMs }
     );

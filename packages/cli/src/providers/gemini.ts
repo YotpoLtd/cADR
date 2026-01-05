@@ -19,7 +19,7 @@ export const geminiProvider: LLMProvider = {
       ],
       generationConfig: {
         temperature: 0.3,
-        maxOutputTokens: 500,
+        maxOutputTokens: 4096,
       },
     });
 

@@ -628,7 +628,7 @@ Update README with LLM analysis documentation:
 ## LLM-Powered Analysis
 
 ### Setup
-1. Install cADR: `npm install -g @yotpoltd/cadr-cli`
+1. Install cADR: `npm install -g cadr-cli`
 2. Set API key: `export OPENAI_API_KEY="your-key"`
 3. Initialize: `cadr init`
 4. Analyze: `cadr --analyze`

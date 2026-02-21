@@ -1,5 +1,6 @@
 import { initCommand } from './commands/init';
 import { analyzeCommand } from './commands/analyze';
+import { statusCommand } from './commands/status';
 
 // Version constants
 const CORE_VERSION = '0.0.1';
@@ -16,6 +17,7 @@ USAGE
 COMMANDS
   init              Create a cadr.yaml configuration file
   analyze           Analyze code changes and generate ADRs (default)
+  status            Show current configuration and environment status
   help              Show this help message
 
 ANALYZE OPTIONS
@@ -84,6 +86,10 @@ if (require.main === module) {
         
       case 'analyze':
         await analyzeCommand(args);
+        break;
+
+      case 'status':
+        await statusCommand();
         break;
         
       default:

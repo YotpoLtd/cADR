@@ -328,6 +328,7 @@ USAGE
 COMMANDS
   init              Create a cadr.yaml configuration file
   analyze           Analyze code changes and generate ADRs (default)
+  status            Show current configuration and environment status
   help              Show this help message
 
 ANALYZE OPTIONS

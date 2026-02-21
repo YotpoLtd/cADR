@@ -59,16 +59,11 @@ describe('CLI Infrastructure Tests', () => {
       }
     });
 
-    test('status command is removed (regression test)', async () => {
-      try {
-        await execAsync(`node ${CLI_PATH} status`, { cwd: tmpdir() });
-        fail('Status command should not exist');
-      } catch (error: unknown) {
-        const errorWithCode = error as { code?: number; stdout?: string; stderr?: string };
-        expect(errorWithCode.code).toBe(1);
-        const output = (errorWithCode.stdout || '') + (errorWithCode.stderr || '');
-        expect(output).toContain('Unknown command');
-      }
+    test('status command is implemented and returns current state', async () => {
+      const { stdout } = await execAsync(`node ${CLI_PATH} status`, { cwd: tmpdir() });
+      expect(stdout).toContain('cADR Status');
+      expect(stdout).toContain('Configuration');
+      expect(stdout).toContain('Environment');
     });
   });
 });

@@ -1,45 +1,66 @@
-# Agent Orchestration Guide
+# Contributing with AI Agents
 
-This repository uses a structured AI context layer to ensure high-quality, consistent contributions from AI agents.
+This document provides guidance for AI agents (like Claude) contributing to cADR.
 
-## Core Philosophy: RPI Pattern
+## Core Philosophy: Research-Plan-Implement (RPI)
 
-We adhere to the **Research-Plan-Implement (RPI)** pattern. No code implementation should start without a research phase and an approved plan.
+We follow a simple three-phase pattern:
 
-- **Research**: Understand the context.
-- **Plan**: Define the solution.
-- **Implement**: Execute with verification.
+1. **Research**: Understand the codebase and requirements (read-only exploration)
+2. **Plan**: Design the solution and get approval
+3. **Implement**: Execute with tests and verification
 
-## Architecture
+## Standard Development Workflow
 
-The AI context layer is organized as follows:
+### 1. Research Phase
 
-- **[.ai/SOP.md](.ai/SOP.md)**: The "Constitution" of the repository. Defines mandatory behaviors.
-- **[.ai/agents/](.ai/agents/)**: Defines specific roles and tool constraints.
-    - [Researcher](.ai/agents/researcher.md)
-    - [Architect](.ai/agents/architect.md)
-    - [Developer](.ai/agents/developer.md)
-    - [Reviewer](.ai/agents/reviewer.md)
-- **[.ai/skills/](.ai/skills/)**: Modular "how-to" guides for common operations.
-    - [Codebase Research](.ai/skills/research.md)
-    - [Robust Implementation](.ai/skills/implementation.md)
-    - [Documentation Sync](.ai/skills/documentation.md)
-    - [PR Creation](.ai/skills/pr-creation.md)
-- **[.ai/rules/](.ai/rules/)**: Global rules that apply to all tasks.
-    - [Robust Loop](.ai/rules/robust-loop.md)
+- Explore the codebase to understand existing patterns
+- Identify relevant files and modules
+- Understand the change requirements and context
+- Document findings before proceeding
 
-## Standard Operations (MCP)
+### 2. Planning Phase
 
-To ensure consistency, agents must use the following standard commands (defined in [.ai/mcp.json](.ai/mcp.json)):
+- Design the implementation approach
+- Identify files to modify
+- Consider edge cases and testing strategy
+- Get plan approval before implementing
 
-- `yarn build`: Compile the project.
-- `yarn lint`: Check for style and logic errors.
-- `yarn test`: Run the test suite.
+### 3. Implementation Phase
 
-## Integration with Specify
+- Make code changes following existing patterns
+- Follow the Robust Loop: Build → Lint → Test → Coverage
+- Update documentation as needed
+- Verify changes work end-to-end
 
-We leverage the `specify` framework for ADR-driven development. New features should be defined in `specs/` before implementation.
+## Standard Commands
 
----
+Use these commands for development:
 
-*This document is maintained by the AI context layer. Any changes to the AI workflow should be reflected here.*
+- `yarn build` - Compile TypeScript to JavaScript
+- `yarn lint` - Run ESLint for code quality
+- `yarn test` - Run Jest test suite
+- `yarn test:coverage` - Check test coverage
+
+## Testing Requirements
+
+- All new features must include tests
+- Maintain or improve test coverage
+- Both unit tests and integration tests are required
+- Tests should cover edge cases and error scenarios
+
+## Code Quality Standards
+
+- Follow TypeScript strict mode
+- Use existing code patterns and conventions
+- Write clear, descriptive commit messages
+- Update relevant documentation as code changes
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines including:
+
+- Development setup
+- Pull request process
+- Code style guidelines
+- Commit conventions

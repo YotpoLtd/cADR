@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { loadConfig, getDefaultConfigPath } from '../config';
-import { GitError, type DiffOptions } from '../git/index';
+import type { DiffOptions } from '../git/index';
 import {
   formatPrompt,
   ANALYSIS_PROMPT_V1,

@@ -56,7 +56,6 @@ The primary CLI package contains:
 
 - `tests/integration/` - Integration tests
 - `docs/` - User and developer documentation
-- `specs/` - Feature specifications and contracts
 - `scripts/` - Build and utility scripts
 - `coverage/` - Test coverage reports
 
@@ -259,6 +258,6 @@ Run only affected tests using jest's changed files option.
 
 - Review [TESTING.md](./TESTING.md) for testing guidelines
 - Read [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution workflow
-- Check `/specs/` for feature specifications
+- Read [AGENTS.md](./AGENTS.md) for AI agent contribution guidelines
 - Review `/docs/` for design documents
 

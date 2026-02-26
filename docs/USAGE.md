@@ -13,7 +13,7 @@ Comprehensive guide to using cADR for automated architectural decision documenta
 
 ## Command Overview
 
-cADR provides commands for initialization, analysis, and version display. Run with `--help` for available options.
+cADR provides commands for initialization, analysis, status display, and version display. Run with `--help` for available options.
 
 ### Initialize Configuration
 
@@ -22,6 +22,10 @@ Creates a configuration file in your project through interactive prompts.
 ### Analyze Changes
 
 Analyzes staged or uncommitted changes for architectural significance. If changes are significant, prompts for ADR generation.
+
+### Check Status
+
+Displays the current cADR configuration and environment status, including provider, model, and API key availability.
 
 ## Analysis Modes
 

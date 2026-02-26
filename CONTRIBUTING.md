@@ -123,7 +123,7 @@ Look for issues labeled `good first issue` - these are great entry points for ne
 - **[Development Guide](./DEVELOPMENT.md)** - Detailed development setup and workflows
 - **[Testing Guide](./TESTING.md)** - Comprehensive testing documentation
 - **[Usage Guide](./docs/USAGE.md)** - Understanding how cADR works
-- **[Specifications](./specs/)** - Feature specs and contracts
+- **[Agent Contributions](./AGENTS.md)** - Guide for AI agent contributions
 
 ## ❓ Questions?
 

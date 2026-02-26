@@ -9,14 +9,14 @@ module.exports = {
     '!**/node_modules/**'
   ],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  // coverageThreshold: {
-  //   global: {
-  //     branches: 20,
-  //     functions: 20,
-  //     lines: 20,
-  //     statements: 20
-  //   }
-  // },
+  coverageThreshold: {
+    global: {
+      branches: 70,
+      functions: 75,
+      lines: 80,
+      statements: 80
+    }
+  },
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'json-summary'],
   verbose: false

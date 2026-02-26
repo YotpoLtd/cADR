@@ -1,8 +1,5 @@
 /**
  * ADR File Management Module Tests
- * 
- * Tests for ADR file creation, numbering, and management.
- * Following TDD: These tests are written BEFORE implementation.
  */
 
 import * as fs from 'fs';
@@ -20,14 +17,12 @@ describe('ADR Module', () => {
   const testDir = path.join(__dirname, '../test-adrs');
 
   beforeEach(() => {
-    // Clean up test directory before each test
     if (fs.existsSync(testDir)) {
       fs.rmSync(testDir, { recursive: true, force: true });
     }
   });
 
   afterEach(() => {
-    // Clean up test directory after each test
     if (fs.existsSync(testDir)) {
       fs.rmSync(testDir, { recursive: true, force: true });
     }
@@ -187,14 +182,15 @@ describe('ADR Module', () => {
       expect(result1.filePath).toContain('0001-first.md');
       expect(result2.filePath).toContain('0002-second.md');
       expect(result3.filePath).toContain('0003-third.md');
-      
+
       expect(fs.existsSync(result1.filePath!)).toBe(true);
       expect(fs.existsSync(result2.filePath!)).toBe(true);
       expect(fs.existsSync(result3.filePath!)).toBe(true);
     });
 
     it('saves correct content to file', () => {
-      const content = '# My Decision\n\n* Status: accepted\n* Date: 2025-10-21\n\n## Context\n\nSome context here.';
+      const content =
+        '# My Decision\n\n* Status: accepted\n* Date: 2025-10-21\n\n## Context\n\nSome context here.';
       const result = saveADR(content, 'My Decision', testDir);
 
       const savedContent = fs.readFileSync(result.filePath!, 'utf-8');
@@ -202,7 +198,6 @@ describe('ADR Module', () => {
     });
 
     it('uses default directory when not specified', () => {
-      // Clean up default directory
       const defaultPath = path.join(process.cwd(), DEFAULT_ADR_DIR);
       if (fs.existsSync(defaultPath)) {
         fs.rmSync(defaultPath, { recursive: true, force: true });
@@ -213,44 +208,38 @@ describe('ADR Module', () => {
 
       expect(result.success).toBe(true);
       expect(result.filePath).toContain(DEFAULT_ADR_DIR);
-      
-      // Cleanup
+
       if (fs.existsSync(defaultPath)) {
         fs.rmSync(defaultPath, { recursive: true, force: true });
       }
     });
 
     it('handles file write errors gracefully', () => {
-      // Create a read-only directory to trigger write error
       fs.mkdirSync(testDir, { recursive: true });
-      
-      // Make directory read-only (if not Windows)
+
       if (process.platform !== 'win32') {
         fs.chmodSync(testDir, 0o444);
-        
+
         const content = '# Test\n\nContent';
         const result = saveADR(content, 'Test', testDir);
 
         expect(result.success).toBe(false);
         expect(result.error).toBeDefined();
         expect(result.filePath).toBeUndefined();
-        
-        // Restore permissions for cleanup
+
         fs.chmodSync(testDir, 0o755);
       } else {
-        // On Windows, just verify error handling structure exists
-        // Skip actual permission test as Windows permissions work differently
         const content = '# Test\n\nContent';
         const result = saveADR(content, 'Test', testDir);
-        
-        // Should succeed on Windows since we can't easily simulate permission errors
+
         expect(result).toHaveProperty('success');
         expect(typeof result.success).toBe('boolean');
       }
     });
 
     it('handles long titles correctly', () => {
-      const longTitle = 'This is a very long title that should still work correctly when converted to a filename slug';
+      const longTitle =
+        'This is a very long title that should still work correctly when converted to a filename slug';
       const content = `# ${longTitle}\n\nContent`;
       const result = saveADR(content, longTitle, testDir);
 
@@ -263,7 +252,6 @@ describe('ADR Module', () => {
       const result = saveADR(content, 'Decision with émojis 🚀', testDir);
 
       expect(result.success).toBe(true);
-      // Should strip unicode to safe characters
       expect(result.filePath).toMatch(/0001-.+\.md$/);
     });
   });
@@ -275,4 +263,3 @@ describe('ADR Module', () => {
     });
   });
 });
-

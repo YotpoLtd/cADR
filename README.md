@@ -2,6 +2,7 @@
 
 [![Test](https://github.com/YotpoLtd/cADR/actions/workflows/test.yml/badge.svg)](https://github.com/YotpoLtd/cADR/actions/workflows/test.yml)
 [![npm version](https://badge.fury.io/js/cadr-cli.svg)](https://www.npmjs.com/package/cadr-cli)
+[![AI Skill](https://img.shields.io/badge/AI%20Skill-cADR-blue?logo=vercel)](https://github.com/YotpoLtd/cADR/tree/main/skills/cadr)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > Automatically capture and document architectural decisions as you code.
@@ -39,6 +40,18 @@ cadr analyze
 ```
 
 **[→ Full Quick Start Guide with Examples](./docs/QUICK_START.md)**
+
+## ⚡ AI Agent Skill
+
+cADR is available as a [Vercel AI Agent Skill](https://github.com/vercel-labs/skills), allowing coding agents (like Claude Code, Cursor, Windsurf, etc.) to automatically capture architectural decisions while they work.
+
+### Install Skill
+
+```bash
+npx skills add YotpoLtd/cADR
+```
+
+For detailed instructions and best practices, see [SKILL.md](./skills/cadr/SKILL.md).
 
 ## 🎯 Key Features
 

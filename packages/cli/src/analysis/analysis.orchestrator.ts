@@ -7,25 +7,17 @@ import {
   formatGenerationPrompt,
   promptForGeneration,
 } from '../llm/prompts';
-import { analyzeChanges, generateADRContent } from '../llm/llm';
+import {
+  analyzeChanges,
+  generateADRContent,
+  type AnalysisResult,
+  type GenerationResult,
+} from '../llm/llm';
 import { loggerInstance as logger } from '../logger';
 import { saveADR } from '../adr/adr';
 import * as path from 'path';
 import { createGitStrategy, type GitStrategy } from './strategies/git-strategy';
 import { presenter, type AnalysisSummary } from '../presenters/console-presenter';
-
-export interface AnalysisResult {
-  is_significant: boolean;
-  reason: string;
-  confidence?: number;
-  timestamp: string;
-}
-
-export interface GenerationResult {
-  content: string;
-  title: string;
-  timestamp: string;
-}
 
 async function runAnalysisInternal(diffOptions: DiffOptions): Promise<void> {
   const configPath = getDefaultConfigPath();
@@ -63,7 +55,7 @@ async function runAnalysisInternal(diffOptions: DiffOptions): Promise<void> {
   try {
     diffContent = await gitStrategy.getDiff();
   } catch (error) {
-    presenter.showReadFilesError();
+    presenter.showDiffReadError();
     logger.error('Failed to get diff', { error, mode: diffOptions.mode });
     return;
   }

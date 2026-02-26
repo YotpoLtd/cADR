@@ -30,6 +30,10 @@ export class ConsolePresenter {
     console.error('\n❌ Failed to read changed files\n');
   }
 
+  showDiffReadError(): void {
+    console.error('\n❌ Failed to read diff content\n');
+  }
+
   showNoChanges(options: DiffOptions): void {
     const modeText =
       options.mode === 'staged'

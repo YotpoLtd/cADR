@@ -1,6 +1,7 @@
 import { getProvider } from '../providers';
 import { AnalysisConfig } from '../config';
 import { loggerInstance as logger } from '../logger';
+import { parseAnalysisResponse, parseMarkdownContent } from './response-parser';
 
 export interface AnalysisRequest {
   file_paths: string[];
@@ -91,52 +92,17 @@ export async function analyzeChanges(
       };
     }
 
-    let parsedResponse: { is_significant: boolean; reason: string; confidence?: number };
+    let parsedResponse;
     try {
-      let jsonContent = responseContent.trim();
-
-      const codeBlockMatch = jsonContent.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
-      if (codeBlockMatch) {
-        jsonContent = codeBlockMatch[1].trim();
-      }
-
-      const jsonMatch = jsonContent.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        jsonContent = jsonMatch[0];
-      }
-
-      parsedResponse = JSON.parse(jsonContent);
+      parsedResponse = parseAnalysisResponse(responseContent);
     } catch (parseError) {
-      logger.warn('Failed to parse LLM response as JSON', {
+      logger.warn('Failed to parse LLM response', {
         error: parseError,
         response: responseContent,
       });
       return {
         result: null,
-        error: `Failed to parse LLM response as JSON. Response was:\n${responseContent.substring(0, 200)}...`,
-      };
-    }
-
-    if (
-      typeof parsedResponse.is_significant !== 'boolean' ||
-      typeof parsedResponse.reason !== 'string'
-    ) {
-      logger.warn('Invalid response format from LLM', {
-        response: parsedResponse,
-      });
-      return {
-        result: null,
-        error: `Invalid response format from LLM. Expected {is_significant: boolean, reason: string}, got: ${JSON.stringify(parsedResponse).substring(0, 150)}...`,
-      };
-    }
-
-    if (parsedResponse.is_significant && !parsedResponse.reason) {
-      logger.warn('Missing reason for significant change', {
-        response: parsedResponse,
-      });
-      return {
-        result: null,
-        error: 'LLM indicated significant change but provided no reason',
+        error: parseError instanceof Error ? parseError.message : String(parseError),
       };
     }
 
@@ -146,11 +112,7 @@ export async function analyzeChanges(
       timestamp: new Date().toISOString(),
     };
 
-    if (
-      typeof parsedResponse.confidence === 'number' &&
-      parsedResponse.confidence >= 0 &&
-      parsedResponse.confidence <= 1
-    ) {
+    if (parsedResponse.confidence !== undefined) {
       result.confidence = parsedResponse.confidence;
     }
 
@@ -235,15 +197,7 @@ export async function generateADRContent(
       };
     }
 
-    let cleanedContent = responseContent.trim();
-
-    const codeBlockMatch = cleanedContent.match(/```(?:markdown|md)?\s*\n?([\s\S]*?)\n?```/);
-    if (codeBlockMatch) {
-      cleanedContent = codeBlockMatch[1].trim();
-    }
-
-    const titleMatch = cleanedContent.match(/^#\s+(.+)$/m);
-    const title = titleMatch ? titleMatch[1].trim() : 'Untitled Decision';
+    const { content: cleanedContent, title } = parseMarkdownContent(responseContent);
 
     const result: GenerationResult = {
       content: cleanedContent,

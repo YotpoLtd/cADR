@@ -3,9 +3,10 @@ import {
   getStagedDiff,
   getAllChanges,
   getAllDiff,
+  getBranchDiffFiles,
+  getBranchDiff,
   type DiffOptions,
 } from '../../git/git.operations';
-import { GitError } from '../../git';
 
 export interface GitStrategy {
   getFiles(): Promise<string[]>;
@@ -39,56 +40,11 @@ export class BranchDiffStrategy implements GitStrategy {
   ) {}
 
   async getFiles(): Promise<string[]> {
-    const { exec } = await import('child_process');
-    const { promisify } = await import('util');
-    const execAsync = promisify(exec);
-
-    try {
-      const { stdout } = await execAsync(`git diff --name-only ${this.base}...${this.head}`);
-      return stdout
-        .split('\n')
-        .map((f) => f.trim())
-        .filter((f) => f.length > 0);
-    } catch (error) {
-      const errorWithCode = error as { code?: number };
-      if (errorWithCode.code === 128) {
-        throw new GitError(
-          `Invalid git reference: ${this.base} or ${this.head}. Please ensure both references exist.`,
-          'GIT_ERROR',
-          error instanceof Error ? error : new Error(String(error))
-        );
-      }
-      throw new GitError(
-        'Unable to read Git repository. Please check repository permissions.',
-        'GIT_ERROR',
-        error instanceof Error ? error : new Error(String(error))
-      );
-    }
+    return getBranchDiffFiles(this.base, this.head);
   }
 
   async getDiff(): Promise<string> {
-    const { exec } = await import('child_process');
-    const { promisify } = await import('util');
-    const execAsync = promisify(exec);
-
-    try {
-      const { stdout } = await execAsync(`git diff ${this.base}...${this.head} --unified=1`);
-      return stdout;
-    } catch (error) {
-      const errorWithCode = error as { code?: number };
-      if (errorWithCode.code === 128) {
-        throw new GitError(
-          `Invalid git reference: ${this.base} or ${this.head}. Please ensure both references exist.`,
-          'GIT_ERROR',
-          error instanceof Error ? error : new Error(String(error))
-        );
-      }
-      throw new GitError(
-        'Unable to read Git repository. Please check repository permissions.',
-        'GIT_ERROR',
-        error instanceof Error ? error : new Error(String(error))
-      );
-    }
+    return getBranchDiff(this.base, this.head);
   }
 }
 

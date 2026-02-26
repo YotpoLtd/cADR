@@ -1,0 +1,51 @@
+name: 'cADR PR Analysis'
+description: 'Automatically analyze pull requests for architectural decisions and suggest ADRs'
+author: 'Yotpo Ltd.'
+
+branding:
+  icon: 'file-text'
+  color: 'blue'
+
+inputs:
+  api_key:
+    description: 'LLM API key (OpenAI or Gemini). Pass from secrets.'
+    required: true
+
+  provider:
+    description: 'LLM provider to use: "openai" or "gemini"'
+    required: false
+    default: 'openai'
+
+  model:
+    description: 'LLM model name. Defaults to provider standard'
+    required: false
+    default: ''
+
+  config_path:
+    description: 'Path to cadr.yaml configuration file relative to repo root'
+    required: false
+    default: 'cadr.yaml'
+
+  adr_directory:
+    description: 'Directory for ADR files relative to repo root'
+    required: false
+    default: 'docs/adr'
+
+  fail_on_error:
+    description: 'If "true", action fails on LLM/API errors. Default is fail-open (always succeed).'
+    required: false
+    default: 'false'
+
+outputs:
+  adr_suggested:
+    description: 'Whether an ADR was suggested ("true" or "false")'
+  adr_path:
+    description: 'Suggested path for the ADR file (if suggested)'
+  analysis_reason:
+    description: 'Reasoning from LLM analysis (if significant)'
+  is_significant:
+    description: 'Whether changes were deemed significant ("true" or "false")'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

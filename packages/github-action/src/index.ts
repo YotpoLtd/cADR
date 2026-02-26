@@ -76,12 +76,13 @@ export async function run() {
       // Optional: Post "No changes" comment if requested, but usually silence is golden
     }
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     const failOnError = core.getInput('fail_on_error') === 'true';
+    const message = error instanceof Error ? error.message : String(error);
     if (failOnError) {
-      core.setFailed(error.message);
+      core.setFailed(message);
     } else {
-      core.warning(`cADR Analysis failed: ${error.message}`);
+      core.warning(`cADR Analysis failed: ${message}`);
       // Don't fail the build, just log warning
     }
   }

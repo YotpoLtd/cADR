@@ -1,5 +1,4 @@
-import { AnalysisResult } from './types';
-import { PRContext, ActionInputs } from './types';
+import { AnalysisResult, PRContext, ActionInputs, SuggestedADR } from './types';
 import { analyzeChanges, generateADRContent } from 'cadr-cli/src/llm';
 import { AnalysisConfig } from 'cadr-cli/src/config';
 import { GitHubClient } from './github-client';
@@ -12,7 +11,7 @@ export class PRAnalyzer {
 
   async analyze(prContext: PRContext, inputs: ActionInputs): Promise<{
     analysisResult: AnalysisResult;
-    suggestedAdr: any | null;
+    suggestedAdr: SuggestedADR | null;
   }> {
     // 1. Get PR Diff
     const diff = await this.githubClient.getPRDiff(prContext.owner, prContext.repo, prContext.pullNumber);
@@ -21,49 +20,28 @@ export class PRAnalyzer {
     const config: AnalysisConfig = {
         provider: inputs.provider,
         analysis_model: inputs.model || (inputs.provider === 'gemini' ? 'gemini-1.5-pro' : 'gpt-4'),
-        api_key_env: 'generated_env_key', // Not used since we pass apiKey directly below if supported, 
-                                          // BUT analyzeChanges relies on process.env[api_key_env].
-                                          // We need to handle this injection.
-        timeout_seconds: 60, // Sane default for actions
+        api_key_env: 'generated_env_key',
+        timeout_seconds: 60,
     };
 
-    // Inject API key into environment so analyzeChanges picks it up
-    // This is a bit hacky but consistent with how CLI works (env var based)
     process.env['generated_env_key'] = this.apiKey;
+    try {
+      return await this._runAnalysis(prContext, inputs, config, diff);
+    } finally {
+      delete process.env['generated_env_key'];
+    }
+  }
 
-    // 3. Analyze Changes
-    // AnalysisRequest: { file_paths: string[]; diff_content: string; repository_context: string; analysis_prompt: string; }
-    // We need to construct this.
-    
-    // We assume all files in diff are relevant if we don't have paths.
-    // Ideally we should fetch file paths from GitHub.
-    // For now we pass empty array or try to parse 'diff --git a/...' from diff string if critical.
-    // But analyzeChanges mainly uses diff_content for LLM prompt.
-    // Using empty array might affect prompt formatting if it lists files.
-    // Let's assume empty is okay or fetch them in future task.
-    const filePaths: string[] = []; 
+  private async _runAnalysis(
+    prContext: PRContext,
+    inputs: ActionInputs,
+    config: AnalysisConfig,
+    diff: string
+  ): Promise<{ analysisResult: AnalysisResult; suggestedAdr: SuggestedADR | null }> {
+    const filePaths: string[] = [];
     const repositoryContext = prContext.repo;
-
-    // We need to format prompt MANUALLY because analyzeChanges expects `analysis_prompt` in request.
-    // CLI uses `formatPrompt` from `prompts.ts`. I should import that too.
-    // But `formatPrompt` takes specific placeholders.
-    // Let's verify prompt formatting from `cli/src/analysis.ts`.
-    
-    // START MANUAL PROMPT FORMATTING (or import)
-    // import { formatPrompt, ANALYSIS_PROMPT_V1 } from 'cadr-cli/src/prompts';
-    // Let's assume we can import them.
-    
-    // For the moment, I'll pass a basic formatted string if import fails, but ideally imported.
     const analysisPrompt = `Analyze the following changes for architectural significance:\n\n${diff}`;
 
-    // REVISIT: Importing formatPrompt from cli/src/prompts.ts would be safer.
-    // But let's proceed with calling analyzeChanges.
-    
-    // We need to mock prompts import or duplicate logic if imports are hard.
-    // Let's rely on imports working with ts-jest fix.
-    
-    // Wait, analyzeChanges takes `analysis_prompt`.
-    
     const analysisResponse = await analyzeChanges(config, {
         file_paths: filePaths,
         diff_content: diff,
@@ -75,9 +53,9 @@ export class PRAnalyzer {
         throw new Error(analysisResponse.error || 'Analysis failed');
     }
 
-    const result = analysisResponse.result; // Types need to match
+    const result = analysisResponse.result;
 
-    let suggestedAdr = null;
+    let suggestedAdr: SuggestedADR | null = null;
 
     if (result.is_significant) {
       // 5. Generate ADR

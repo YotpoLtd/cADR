@@ -2,6 +2,10 @@ import { GitHubClient } from '../src/github-client';
 
 // Mock octokit
 const mockOctokit = {
+  paginate: jest.fn(async (method: (params: object) => Promise<{ data: unknown[] }>, params: object) => {
+    const result = await method(params);
+    return result.data;
+  }),
   rest: {
     issues: {
       listComments: jest.fn(),

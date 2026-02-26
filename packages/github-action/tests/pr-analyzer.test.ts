@@ -52,8 +52,8 @@ describe('PRAnalyzer', () => {
     const result = await analyzer.analyze(prContext, config as any);
 
     expect(result.suggestedAdr).not.toBeNull();
-    expect(result.suggestedAdr.content).toBe('# 3. New ADR\n\nContent');
-    expect(result.suggestedAdr.number).toBe(3);
+    expect(result.suggestedAdr!.content).toBe('# 3. New ADR\n\nContent');
+    expect(result.suggestedAdr!.number).toBe(3);
     // Check next number logic (mock returns [1, 2] -> next is 3)
   });
 
@@ -116,8 +116,8 @@ describe('PRAnalyzer', () => {
     const result = await freshAnalyzer.analyze(prContext, config as any);
 
     expect(result.suggestedAdr).not.toBeNull();
-    expect(result.suggestedAdr.number).toBe(1);
-    expect(result.suggestedAdr.filename).toBe('0001-first-adr.md');
+    expect(result.suggestedAdr!.number).toBe(1);
+    expect(result.suggestedAdr!.filename).toBe('0001-first-adr.md');
   });
 
   it('should propagate error when generateADRContent throws', async () => {

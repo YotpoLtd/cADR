@@ -1,7 +1,18 @@
+import * as core from '@actions/core';
 import * as github from '@actions/github';
+import { CommentBuilder } from './comment-builder';
+
+interface GitHubComment {
+  id: number;
+  body?: string | null;
+}
+
+interface GitHubContentItem {
+  name: string;
+}
 
 export class GitHubClient {
-  private octokit: any; // Using any for now to avoid complex Octokit type issues
+  private octokit: ReturnType<typeof github.getOctokit>;
 
   constructor(token: string) {
     this.octokit = github.getOctokit(token);
@@ -20,21 +31,20 @@ export class GitHubClient {
   }
 
   async findExistingComment(owner: string, repo: string, issueNumber: number, marker: string) {
-    const { data: comments } = await this.octokit.rest.issues.listComments({
+    const comments = await this.octokit.paginate(this.octokit.rest.issues.listComments, {
       owner,
       repo,
       issue_number: issueNumber,
     });
 
-    return comments.find((c: any) => c.body && c.body.includes(marker));
+    return comments.find((c: GitHubComment) => c.body && c.body.includes(marker));
   }
 
   async postOrUpdateComment(issueNumber: number, body: string): Promise<void> {
     const context = github.context;
     const { owner, repo } = context.repo;
-    const CADR_MARKER = '### 🤖 cADR Analysis'; // Should match what's in CommentBuilder
 
-    const existingComment = await this.findExistingComment(owner, repo, issueNumber, CADR_MARKER);
+    const existingComment = await this.findExistingComment(owner, repo, issueNumber, CommentBuilder.MARKER);
 
     if (existingComment) {
       await this.octokit.rest.issues.updateComment({
@@ -65,11 +75,12 @@ export class GitHubClient {
       if (!Array.isArray(contents)) return [];
 
       return contents
-        .filter((file: any) => file.name.match(/^\d{4}-.*\.md$/))
-        .map((file: any) => parseInt(file.name.substring(0, 4), 10))
+        .filter((file: GitHubContentItem) => file.name.match(/^\d{4}-.*\.md$/))
+        .map((file: GitHubContentItem) => parseInt(file.name.substring(0, 4), 10))
         .filter((n: number) => !isNaN(n));
     } catch (error) {
-      // Directory likely doesn't exist
+      const message = error instanceof Error ? error.message : String(error);
+      core.warning(`getExistingADRs failed (${owner}/${repo}, path=${directory}): ${message}`);
       return [];
     }
   }

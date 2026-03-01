@@ -1,29 +1,43 @@
-// Test version constants in CLI
-const CORE_VERSION = '0.0.1';
-const CLI_VERSION = '0.0.1';
+import { showVersion } from './index';
 
-describe('CLI Version Constants', () => {
-  test('exports CORE_VERSION constant', () => {
-    expect(CORE_VERSION).toBe('0.0.1');
+jest.mock('./commands/init', () => ({ initCommand: jest.fn() }));
+jest.mock('./commands/analyze', () => ({ analyzeCommand: jest.fn() }));
+jest.mock('./commands/status', () => ({ statusCommand: jest.fn() }));
+
+describe('showVersion', () => {
+  let stdoutSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    stdoutSpy = jest.spyOn(process.stdout, 'write').mockImplementation(() => true);
   });
 
-  test('CORE_VERSION is a string', () => {
-    expect(typeof CORE_VERSION).toBe('string');
+  afterEach(() => {
+    stdoutSpy.mockRestore();
   });
 
-  test('CORE_VERSION matches semantic version pattern', () => {
-    expect(CORE_VERSION).toMatch(/^\d+\.\d+\.\d+$/);
+  test('writes to process.stdout', () => {
+    showVersion();
+    expect(stdoutSpy).toHaveBeenCalled();
   });
 
-  test('exports CLI_VERSION constant', () => {
-    expect(CLI_VERSION).toBe('0.0.1');
+  test('output contains cADR version', () => {
+    showVersion();
+    const output = stdoutSpy.mock.calls[0][0] as string;
+    expect(output).toContain('cADR version');
   });
 
-  test('CLI_VERSION is a string', () => {
-    expect(typeof CLI_VERSION).toBe('string');
+  test('output version string matches semver pattern', () => {
+    showVersion();
+    const output = stdoutSpy.mock.calls[0][0] as string;
+    expect(output).toMatch(/\d+\.\d+\.\d+/);
   });
 
-  test('CLI_VERSION matches semantic version pattern', () => {
-    expect(CLI_VERSION).toMatch(/^\d+\.\d+\.\d+$/);
+  test('output contains the version from package.json', () => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const pkg = require('../package.json');
+    showVersion();
+    const output = stdoutSpy.mock.calls[0][0] as string;
+    expect(output).toContain(pkg.version);
   });
 });

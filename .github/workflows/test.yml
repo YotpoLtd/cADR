@@ -38,8 +38,11 @@ jobs:
           node packages/cli/dist/index.js --help || echo "CLI help test completed"
       
       - name: Lint
-        run: yarn lint
-      
+        run: yarn lint --max-warnings 0
+
+      - name: Format Check
+        run: yarn format:check
+
       - name: Test
         run: yarn test --coverage
       

@@ -20,7 +20,7 @@ import {
   SIGNIFICANT_JSON,
   VALID_ADR_MARKDOWN,
 } from '../helpers/fake-provider';
-import { existsSync, readdirSync, mkdirSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, readdirSync, mkdirSync, writeFileSync } from 'fs';
 import * as path from 'path';
 
 jest.setTimeout(30000);

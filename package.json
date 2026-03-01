@@ -11,6 +11,8 @@
     "build": "tsc --build && (cd packages/cli && npm run postbuild)",
     "test": "jest",
     "test:coverage": "jest --coverage",
+    "test:e2e": "jest --testPathPattern='tests/integration/e2e'",
+    "test:integration": "jest --testPathPattern='tests/integration/module'",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"**/*.{ts,json,md}\"",
     "clean": "rm -rf packages/*/dist"

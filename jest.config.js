@@ -9,6 +9,7 @@ module.exports = {
     '!**/node_modules/**'
   ],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  testPathIgnorePatterns: ['/node_modules/', 'tests/integration/e2e/'],
   coverageThreshold: {
     global: {
       branches: 70,
@@ -21,4 +22,3 @@ module.exports = {
   coverageReporters: ['text', 'lcov', 'json-summary'],
   verbose: false
 };
-

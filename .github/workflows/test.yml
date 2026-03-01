@@ -22,6 +22,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       
+      - name: Security Audit
+        run: yarn audit --level high || true
+
       - name: Build CLI package
         run: |
           echo "Building CLI package..."

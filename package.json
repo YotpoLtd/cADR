@@ -16,7 +16,8 @@
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"**/*.{ts,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,json,md}\"",
-    "clean": "rm -rf packages/*/dist"
+    "clean": "rm -rf packages/*/dist",
+    "audit": "yarn audit --level high"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

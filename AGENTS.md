@@ -56,6 +56,29 @@ Use these commands for development:
 - Write clear, descriptive commit messages
 - Update relevant documentation as code changes
 
+## Error Handling Policy
+
+cADR follows a fail-open error strategy. Errors must never block the user's Git workflow.
+
+### Rules
+
+- Always throw `Error` objects, never literals (enforced by ESLint `no-throw-literal`)
+- Never swallow errors silently — log via `logger.ts` with appropriate level
+- Catch at command boundaries (in `commands/`), warn and continue
+- Never call `process.exit()` directly — let Commander handle exit codes
+- Use descriptive error messages that include context (what operation failed, what input caused it)
+
+### Pattern
+
+```typescript
+try {
+  const result = await riskyOperation(input);
+} catch (error) {
+  logger.warn(`Operation failed for ${context}: ${error}`);
+  return fallbackValue;
+}
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines including:

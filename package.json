@@ -15,7 +15,9 @@
     "test:integration": "jest --testPathPattern='tests/integration/module'",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"**/*.{ts,json,md}\"",
-    "clean": "rm -rf packages/*/dist"
+    "format:check": "prettier --check \"**/*.{ts,json,md}\"",
+    "clean": "rm -rf packages/*/dist",
+    "audit": "yarn audit --level high"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

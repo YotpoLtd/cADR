@@ -1,0 +1,386 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ADR filename generation snapshots generateADRFilename output matches snapshot for typical inputs 1`] = `
+[
+  {
+    "input": {
+      "number": 1,
+      "title": "Use PostgreSQL for Storage",
+    },
+    "output": "0001-use-postgresql-for-storage.md",
+  },
+  {
+    "input": {
+      "number": 42,
+      "title": "Adopt React 18",
+    },
+    "output": "0042-adopt-react-18.md",
+  },
+  {
+    "input": {
+      "number": 100,
+      "title": "Replace REST with gRPC",
+    },
+    "output": "0100-replace-rest-with-grpc.md",
+  },
+  {
+    "input": {
+      "number": 5,
+      "title": "Switch to OAuth 2.0!",
+    },
+    "output": "0005-switch-to-oauth-2-0.md",
+  },
+  {
+    "input": {
+      "number": 9999,
+      "title": "Final Decision",
+    },
+    "output": "9999-final-decision.md",
+  },
+]
+`;
+
+exports[`ADR filename generation snapshots titleToSlug output matches snapshot for edge cases 1`] = `
+[
+  {
+    "input": "Simple Title",
+    "output": "simple-title",
+  },
+  {
+    "input": "API v2.0: New Endpoints!",
+    "output": "api-v2-0-new-endpoints",
+  },
+  {
+    "input": "---Leading Hyphens---",
+    "output": "leading-hyphens",
+  },
+  {
+    "input": "Multiple   Spaces   Here",
+    "output": "multiple-spaces-here",
+  },
+  {
+    "input": "",
+    "output": "",
+  },
+  {
+    "input": "!!!",
+    "output": "",
+  },
+  {
+    "input": "CamelCase And snake_case Mixed",
+    "output": "camelcase-and-snake-case-mixed",
+  },
+]
+`;
+
+exports[`CLI interface snapshots help output matches snapshot 1`] = `
+"
+cADR - Continuous Architectural Decision Records
+Version: 0.0.1
+
+USAGE
+  cadr [command] [options]
+
+COMMANDS
+  init              Create a cadr.yaml configuration file
+  analyze           Analyze code changes and generate ADRs (default)
+  status            Show current configuration and environment status
+  help              Show this help message
+
+ANALYZE OPTIONS
+  --all             Analyze all uncommitted changes (staged + unstaged) [default]
+  --staged          Analyze only staged changes
+  --base <ref>      Base git reference for CI/CD (e.g., origin/main)
+  --head <ref>      Head git reference for CI/CD (default: HEAD)
+
+GLOBAL OPTIONS
+  -h, --help        Show help message
+  -v, --version     Show version information
+  --verbose         Enable verbose logging
+
+EXAMPLES
+  # Local development
+  cadr                                # Analyze all uncommitted files (default)
+  cadr analyze                        # Analyze all uncommitted files
+  cadr analyze --staged               # Analyze only staged files
+  cadr analyze --all                  # Analyze all uncommitted files (explicit)
+  
+  # CI/CD (Pull Requests)
+  cadr analyze --base origin/main     # Compare current HEAD to main
+  cadr analyze --base origin/main --head feature-branch
+  cadr analyze --base HEAD~1          # Compare to previous commit
+  
+  # Other commands
+  cadr init                           # Initialize configuration
+  cadr --verbose analyze              # Analyze with debug logs
+
+LEARN MORE
+  GitHub: https://github.com/YotpoLtd/cADR
+  Docs:   https://github.com/YotpoLtd/cADR#readme
+"
+`;
+
+exports[`CLI interface snapshots version output matches snapshot 1`] = `
+"cADR version 0.0.1 (core: 0.0.1)
+"
+`;
+
+exports[`Config validation contract snapshots AnalysisConfig interface shape matches snapshot 1`] = `
+[
+  "analysis_model",
+  "api_key_env",
+  "ignore_patterns",
+  "provider",
+  "timeout_seconds",
+]
+`;
+
+exports[`Config validation contract snapshots valid config passes validation with expected result shape 1`] = `
+{
+  "errors": [],
+  "valid": true,
+}
+`;
+
+exports[`Config validation contract snapshots valid config with optional fields passes validation 1`] = `
+{
+  "errors": [],
+  "valid": true,
+}
+`;
+
+exports[`Config validation contract snapshots validation errors for invalid provider match snapshot 1`] = `
+{
+  "errors": [
+    "provider must be one of the following values: openai, gemini",
+  ],
+  "valid": false,
+}
+`;
+
+exports[`Config validation contract snapshots validation errors for missing required fields match snapshot 1`] = `
+{
+  "errors": [
+    "Provider must be one of: "openai", "gemini"",
+    "Analysis model is required",
+    "API key environment variable name is required",
+    "timeout_seconds is required",
+  ],
+  "valid": false,
+}
+`;
+
+exports[`Config validation contract snapshots validation errors for out-of-range timeout match snapshot 1`] = `
+{
+  "errors": [
+    "timeout_seconds must not exceed 60 seconds",
+  ],
+  "valid": false,
+}
+`;
+
+exports[`LLM prompt template snapshots ANALYSIS_PROMPT_V1 matches snapshot 1`] = `
+"
+You are an expert principal engineer and software architect acting as a meticulous code reviewer. Your sole task is to determine if the provided git diff represents an architecturally significant change that warrants an Architectural Decision Record (ADR).
+
+Given the following staged changes:
+{file_paths}
+
+Diff content:
+{diff_content}
+
+A change is considered architecturally significant if it:
+- Introduces a new external dependency, library, or service.
+- Adds, removes, or modifies infrastructure components (e.g., databases, caches, queues, Docker services).
+- Changes a public API contract, a data schema, or a critical data model.
+- Alters authentication, authorization, or other core security patterns.
+- Modifies cross-cutting concerns like logging, observability, or CI/CD pipelines.
+
+Respond ONLY with a single, minified JSON object with no preamble, no markdown, and no additional text. The JSON object must adhere to the following schema:
+{"is_significant": boolean, "reason": string}
+
+The "reason" should be a concise, one-sentence explanation for your decision, suitable for showing to a developer. If the change is not significant, the reason should be an empty string.
+"
+`;
+
+exports[`LLM prompt template snapshots GENERATION_PROMPT_V1 matches snapshot 1`] = `
+"
+You are an expert software architect. Your task is to write a comprehensive Architectural Decision Record (ADR) following the MADR (Markdown Architectural Decision Records) template.
+
+Given the following code changes:
+{file_paths}
+
+Diff content:
+{diff_content}
+
+Generate an ADR that follows this EXACT structure:
+
+# [Short title of solved problem and solution]
+
+* Status: [proposed | rejected | accepted | deprecated | superseded by [ADR-0005](0005-example.md)]
+* Date: {current_date}
+
+## Context and Problem Statement
+
+[Describe the context and problem statement in 2-3 sentences. What is the issue that we're addressing?]
+
+## Decision Drivers
+
+* [decision driver 1, e.g., a force, constraint, requirement]
+* [decision driver 2]
+* [etc.]
+
+## Considered Options
+
+* [option 1]
+* [option 2]
+* [option 3]
+
+## Decision Outcome
+
+Chosen option: "[option 1]", because [justification. e.g., only option which meets KO criterion decision driver | which resolves force 1 | etc.].
+
+### Consequences
+
+* Good, because [positive consequence 1]
+* Good, because [positive consequence 2]
+* Bad, because [negative consequence 1]
+* Bad, because [negative consequence 2]
+
+## More Information
+
+[Any additional context, links to related discussions, or implementation notes]
+
+IMPORTANT INSTRUCTIONS:
+1. Use the EXACT markdown structure shown above
+2. Set Status to "accepted" (since this change is being committed)
+3. The title should be concise, action-oriented, and describe the decision made
+4. Keep Context and Problem Statement brief but clear (2-4 sentences)
+5. List at least 2-3 decision drivers that influenced this choice
+6. Include at least 2 considered options (including the chosen one)
+7. Be specific about consequences - list both benefits and drawbacks
+8. In "More Information", mention any technical details, related files, or future considerations
+
+Respond ONLY with the markdown content of the ADR. Do not include any preamble, explanation, or markdown code fences. Start directly with the # title.
+"
+`;
+
+exports[`LLM prompt template snapshots formatted analysis prompt with known input matches snapshot 1`] = `
+"
+You are an expert principal engineer and software architect acting as a meticulous code reviewer. Your sole task is to determine if the provided git diff represents an architecturally significant change that warrants an Architectural Decision Record (ADR).
+
+Given the following staged changes:
+src/auth/login.ts
+src/auth/oauth.ts
+
+Diff content:
+--- a/src/auth/login.ts
++++ b/src/auth/login.ts
+@@ -1,3 +1,5 @@
++import { OAuth2Client } from "google-auth-library";
+
+
+A change is considered architecturally significant if it:
+- Introduces a new external dependency, library, or service.
+- Adds, removes, or modifies infrastructure components (e.g., databases, caches, queues, Docker services).
+- Changes a public API contract, a data schema, or a critical data model.
+- Alters authentication, authorization, or other core security patterns.
+- Modifies cross-cutting concerns like logging, observability, or CI/CD pipelines.
+
+Respond ONLY with a single, minified JSON object with no preamble, no markdown, and no additional text. The JSON object must adhere to the following schema:
+{"is_significant": boolean, "reason": string}
+
+The "reason" should be a concise, one-sentence explanation for your decision, suitable for showing to a developer. If the change is not significant, the reason should be an empty string.
+"
+`;
+
+exports[`LLM prompt template snapshots formatted generation prompt with known input matches snapshot 1`] = `
+"
+You are an expert software architect. Your task is to write a comprehensive Architectural Decision Record (ADR) following the MADR (Markdown Architectural Decision Records) template.
+
+Given the following code changes:
+src/auth/login.ts
+src/auth/oauth.ts
+
+Diff content:
+--- a/src/auth/login.ts
++++ b/src/auth/login.ts
+@@ -1,3 +1,5 @@
++import { OAuth2Client } from "google-auth-library";
+
+
+Generate an ADR that follows this EXACT structure:
+
+# [Short title of solved problem and solution]
+
+* Status: [proposed | rejected | accepted | deprecated | superseded by [ADR-0005](0005-example.md)]
+* Date: 2025-06-15
+
+## Context and Problem Statement
+
+[Describe the context and problem statement in 2-3 sentences. What is the issue that we're addressing?]
+
+## Decision Drivers
+
+* [decision driver 1, e.g., a force, constraint, requirement]
+* [decision driver 2]
+* [etc.]
+
+## Considered Options
+
+* [option 1]
+* [option 2]
+* [option 3]
+
+## Decision Outcome
+
+Chosen option: "[option 1]", because [justification. e.g., only option which meets KO criterion decision driver | which resolves force 1 | etc.].
+
+### Consequences
+
+* Good, because [positive consequence 1]
+* Good, because [positive consequence 2]
+* Bad, because [negative consequence 1]
+* Bad, because [negative consequence 2]
+
+## More Information
+
+[Any additional context, links to related discussions, or implementation notes]
+
+IMPORTANT INSTRUCTIONS:
+1. Use the EXACT markdown structure shown above
+2. Set Status to "accepted" (since this change is being committed)
+3. The title should be concise, action-oriented, and describe the decision made
+4. Keep Context and Problem Statement brief but clear (2-4 sentences)
+5. List at least 2-3 decision drivers that influenced this choice
+6. Include at least 2 considered options (including the chosen one)
+7. Be specific about consequences - list both benefits and drawbacks
+8. In "More Information", mention any technical details, related files, or future considerations
+
+Respond ONLY with the markdown content of the ADR. Do not include any preamble, explanation, or markdown code fences. Start directly with the # title.
+"
+`;
+
+exports[`saveADR return shape snapshots failed save result shape matches snapshot 1`] = `
+{
+  "hasError": true,
+  "hasFilePath": false,
+  "keys": [
+    "error",
+    "success",
+  ],
+  "success": false,
+}
+`;
+
+exports[`saveADR return shape snapshots successful save result shape matches snapshot 1`] = `
+{
+  "hasError": false,
+  "hasFilePath": true,
+  "keys": [
+    "filePath",
+    "success",
+  ],
+  "success": true,
+}
+`;

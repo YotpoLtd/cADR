@@ -10,6 +10,7 @@ import {
   getStagedDiff,
   getAllChanges,
   getAllDiff,
+  type DiffOptions,
 } from '../../git/git.operations';
 
 jest.mock('../../git/git.operations');
@@ -202,7 +203,7 @@ describe('createGitStrategy', () => {
   });
 
   it('returns AllChangesStrategy for unknown mode (default case)', () => {
-    const strategy = createGitStrategy({ mode: 'unknown' as any });
+    const strategy = createGitStrategy({ mode: 'unknown' as unknown as DiffOptions['mode'] });
 
     expect(strategy).toBeInstanceOf(AllChangesStrategy);
   });

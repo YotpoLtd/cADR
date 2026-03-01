@@ -8,7 +8,7 @@ import { getProvider } from '../../../packages/cli/src/providers/registry';
 import { promptForGeneration } from '../../../packages/cli/src/llm/prompts';
 import { runAnalysis } from '../../../packages/cli/src/analysis/analysis.orchestrator';
 import { createTestRepo } from '../helpers/test-repo';
-import { createFakeProvider, NOT_SIGNIFICANT_JSON } from '../helpers/fake-provider';
+import { createFakeProvider } from '../helpers/fake-provider';
 import { mkdtempSync, writeFileSync, rmSync } from 'fs';
 import { tmpdir } from 'os';
 import * as path from 'path';

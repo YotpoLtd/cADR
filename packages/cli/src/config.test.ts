@@ -2,8 +2,6 @@ import { loadConfig, validateConfig, getDefaultConfigPath, createConfig, Analysi
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import * as readline from 'readline';
-import * as yup from 'yup';
-
 // Mock fs and yaml modules
 jest.mock('fs');
 jest.mock('js-yaml');

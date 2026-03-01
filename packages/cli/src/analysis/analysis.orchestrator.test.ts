@@ -9,7 +9,6 @@ jest.mock('../presenters/console-presenter');
 import { loadConfig, getDefaultConfigPath } from '../config';
 import {
   formatPrompt,
-  ANALYSIS_PROMPT_V1,
   formatGenerationPrompt,
   promptForGeneration,
 } from '../llm/prompts';

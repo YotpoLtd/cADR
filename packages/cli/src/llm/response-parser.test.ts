@@ -11,7 +11,6 @@ import {
   parseAnalysisResponse,
   extractTitleFromMarkdown,
   parseLLMResponse,
-  ParsedAnalysisResponse,
 } from './response-parser';
 
 beforeEach(() => {
@@ -136,7 +135,7 @@ describe('parseLLMResponse', () => {
 
   it('should rethrow with descriptive message when validator throws', () => {
     const input = JSON.stringify({ key: 'value' });
-    const validator = (_parsed: unknown): never => {
+    const validator = (): never => {
       throw new Error('validation failed');
     };
     expect(() => parseLLMResponse(input, validator)).toThrow(

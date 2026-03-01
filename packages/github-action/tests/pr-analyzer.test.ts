@@ -1,5 +1,6 @@
 import { PRAnalyzer } from '../src/pr-analyzer';
-import { PRContext } from '../src/types';
+import { PRContext, ActionInputs } from '../src/types';
+import { GitHubClient } from '../src/github-client';
 
 jest.mock('cadr-cli/src/llm');
 import { analyzeChanges, generateADRContent } from 'cadr-cli/src/llm';
@@ -28,13 +29,13 @@ describe('PRAnalyzer', () => {
       getPRDiff: jest.fn().mockResolvedValue('raw diff'),
       getExistingADRs: jest.fn().mockResolvedValue([1, 2]),
     };
-    analyzer = new PRAnalyzer(mockGithubClient as any, 'dummy-key');
+    analyzer = new PRAnalyzer(mockGithubClient as unknown as GitHubClient, 'dummy-key');
   });
 
   it('should return null suggestedAdr when changes are not significant', async () => {
     mockAnalyzeChanges.mockResolvedValue({ result: { is_significant: false, reason: 'Docs only' } });
     
-    const result = await analyzer.analyze(prContext, config as any);
+    const result = await analyzer.analyze(prContext, config as unknown as ActionInputs);
     
     expect(result.suggestedAdr).toBeNull();
     expect(mockGenerateADRContent).not.toHaveBeenCalled();
@@ -49,7 +50,7 @@ describe('PRAnalyzer', () => {
       }
     });
 
-    const result = await analyzer.analyze(prContext, config as any);
+    const result = await analyzer.analyze(prContext, config as unknown as ActionInputs);
 
     expect(result.suggestedAdr).not.toBeNull();
     expect(result.suggestedAdr!.content).toBe('# 3. New ADR\n\nContent');
@@ -60,21 +61,21 @@ describe('PRAnalyzer', () => {
   it('should throw when analyzeChanges returns result null with error', async () => {
     mockAnalyzeChanges.mockResolvedValue({ result: null, error: 'LLM quota exceeded' });
 
-    await expect(analyzer.analyze(prContext, config as any))
+    await expect(analyzer.analyze(prContext, config as unknown as ActionInputs))
       .rejects.toThrow('LLM quota exceeded');
   });
 
   it('should throw with default message when analyzeChanges returns result null without error', async () => {
     mockAnalyzeChanges.mockResolvedValue({ result: null });
 
-    await expect(analyzer.analyze(prContext, config as any))
+    await expect(analyzer.analyze(prContext, config as unknown as ActionInputs))
       .rejects.toThrow('Analysis failed');
   });
 
   it('should propagate error when analyzeChanges throws', async () => {
     mockAnalyzeChanges.mockRejectedValue(new Error('Network timeout'));
 
-    await expect(analyzer.analyze(prContext, config as any))
+    await expect(analyzer.analyze(prContext, config as unknown as ActionInputs))
       .rejects.toThrow('Network timeout');
   });
 
@@ -82,7 +83,7 @@ describe('PRAnalyzer', () => {
     mockAnalyzeChanges.mockResolvedValue({ result: { is_significant: true, reason: 'Big change' } });
     mockGenerateADRContent.mockResolvedValue({ result: null });
 
-    const result = await analyzer.analyze(prContext, config as any);
+    const result = await analyzer.analyze(prContext, config as unknown as ActionInputs);
 
     expect(result.suggestedAdr).toBeNull();
     expect(result.analysisResult.is_significant).toBe(true);
@@ -93,10 +94,10 @@ describe('PRAnalyzer', () => {
       getPRDiff: jest.fn().mockResolvedValue(''),
       getExistingADRs: jest.fn().mockResolvedValue([]),
     };
-    const emptyDiffAnalyzer = new PRAnalyzer(mockGithubClient as any, 'dummy-key');
+    const emptyDiffAnalyzer = new PRAnalyzer(mockGithubClient as unknown as GitHubClient, 'dummy-key');
     mockAnalyzeChanges.mockResolvedValue({ result: { is_significant: false, reason: 'No changes' } });
 
-    await emptyDiffAnalyzer.analyze(prContext, config as any);
+    await emptyDiffAnalyzer.analyze(prContext, config as unknown as ActionInputs);
 
     expect(mockAnalyzeChanges).toHaveBeenCalled();
     expect(mockAnalyzeChanges.mock.calls[0][1]).toMatchObject({ diff_content: '' });
@@ -107,13 +108,13 @@ describe('PRAnalyzer', () => {
       getPRDiff: jest.fn().mockResolvedValue('raw diff'),
       getExistingADRs: jest.fn().mockResolvedValue([]),
     };
-    const freshAnalyzer = new PRAnalyzer(mockGithubClient as any, 'dummy-key');
+    const freshAnalyzer = new PRAnalyzer(mockGithubClient as unknown as GitHubClient, 'dummy-key');
     mockAnalyzeChanges.mockResolvedValue({ result: { is_significant: true, reason: 'New arch' } });
     mockGenerateADRContent.mockResolvedValue({
       result: { content: '# 1. First ADR\n\nContent', title: 'First ADR' }
     });
 
-    const result = await freshAnalyzer.analyze(prContext, config as any);
+    const result = await freshAnalyzer.analyze(prContext, config as unknown as ActionInputs);
 
     expect(result.suggestedAdr).not.toBeNull();
     expect(result.suggestedAdr!.number).toBe(1);
@@ -124,7 +125,7 @@ describe('PRAnalyzer', () => {
     mockAnalyzeChanges.mockResolvedValue({ result: { is_significant: true, reason: 'Big change' } });
     mockGenerateADRContent.mockRejectedValue(new Error('Generation service unavailable'));
 
-    await expect(analyzer.analyze(prContext, config as any))
+    await expect(analyzer.analyze(prContext, config as unknown as ActionInputs))
       .rejects.toThrow('Generation service unavailable');
   });
 });

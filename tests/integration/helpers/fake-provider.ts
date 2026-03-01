@@ -1,4 +1,4 @@
-import type { LLMProvider, ProviderCallOptions } from '../../../packages/cli/src/providers/types';
+import type { LLMProvider } from '../../../packages/cli/src/providers/types';
 
 export const SIGNIFICANT_JSON = JSON.stringify({
   is_significant: true,
@@ -56,7 +56,7 @@ export interface FakeProviderConfig {
 
 export function createFakeProvider(config: FakeProviderConfig = {}): LLMProvider & { analyze: jest.Mock } {
   let callCount = 0;
-  const analyze = jest.fn(async (_prompt: string, _options: ProviderCallOptions): Promise<string | undefined> => {
+  const analyze = jest.fn(async (): Promise<string | undefined> => {
     callCount++;
     if (config.shouldThrow && (!config.throwOnCall || callCount === config.throwOnCall)) {
       throw config.shouldThrow;

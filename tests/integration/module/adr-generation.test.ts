@@ -89,7 +89,7 @@ describe('ADR Generation — module-level integration', () => {
     const adrFiles = files.filter((f) => /^0001-.+\.md$/.test(f));
     expect(adrFiles).toHaveLength(1);
 
-    const fileContent = require('fs').readFileSync(path.join(adrDir, adrFiles[0]), 'utf-8');
+    const fileContent = readFileSync(path.join(adrDir, adrFiles[0]), 'utf-8');
     expect(fileContent).toContain('PostgreSQL');
 
     const output = allOutput();

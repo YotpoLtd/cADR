@@ -13,7 +13,7 @@ describe('Action Entrypoint', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     // Default context
-    (github as any).context = {
+    (github as unknown as Record<string, unknown>).context = {
       eventName: 'pull_request',
       repo: { owner: 'owner', repo: 'repo' },
       payload: {

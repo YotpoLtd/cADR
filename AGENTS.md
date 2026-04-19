@@ -64,3 +64,20 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines in
 - Pull request process
 - Code style guidelines
 - Commit conventions
+
+## Cursor Cloud specific instructions
+
+This is a pure Node.js/TypeScript CLI tool with no Docker, databases, or background services. The update script runs `yarn install` to refresh dependencies on VM startup.
+
+### Running the project
+
+- Standard commands are in the "Standard Commands" section above (`yarn build`, `yarn lint`, `yarn test`, `yarn test:coverage`).
+- `yarn build` must succeed before running integration tests, as they invoke the compiled CLI at `packages/cli/dist/index.js`.
+- The CLI can be tested directly via `node packages/cli/dist/index.js <command>`.
+
+### Caveats
+
+- `cadr init` and `cadr analyze` are interactive (prompt for user input). When testing these commands in automation, either pipe input or create config files manually instead.
+- Integration tests create temporary Git repositories in `/tmp` and clean up after themselves.
+- Unit tests mock all LLM calls and Git operations — no API keys are needed.
+- The `OPENAI_API_KEY` or `GEMINI_API_KEY` environment variables are only needed for live end-to-end testing of the `analyze` command against a real LLM provider.

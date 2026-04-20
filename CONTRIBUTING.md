@@ -78,6 +78,13 @@ Releases are **automatically triggered** when changes are merged to the `master`
 
 ## Pull Request Process
 
+### PR Size Guidelines
+
+We encourage small, focused pull requests. PRs are automatically labeled by size:
+- **XS/S**: Ideal for review
+- **M**: Acceptable for features
+- **L/XL**: Consider splitting into smaller PRs
+
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes following the commit convention

@@ -1,0 +1,7 @@
+# Default owners
+* @YotpoLtd/cadr-maintainers
+
+# Security-sensitive paths
+packages/cli/src/providers/ @YotpoLtd/cadr-maintainers
+packages/cli/src/config.ts @YotpoLtd/cadr-maintainers
+.github/workflows/ @YotpoLtd/cadr-maintainers

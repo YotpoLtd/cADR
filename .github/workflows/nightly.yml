@@ -1,0 +1,39 @@
+name: Nightly Drift Detection
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  drift-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Strict Lint
+        run: yarn lint --max-warnings 0
+
+      - name: Format Check
+        run: yarn format:check
+
+      - name: Dependency Freshness
+        run: yarn outdated || true
+
+      - name: Security Audit
+        run: yarn audit --level moderate || true
+
+      - name: Full Test Suite
+        run: yarn test --coverage

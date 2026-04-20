@@ -11,7 +11,8 @@ module.exports = {
   ],
   rules: {
     'no-console': 'error', // Enforce structured logging (Constitution)
-    '@typescript-eslint/no-explicit-any': 'error'
+    '@typescript-eslint/no-explicit-any': 'error',
+    'no-throw-literal': 'error'
   },
   ignorePatterns: ['dist/', 'node_modules/', 'coverage/', '*.js']
 };
